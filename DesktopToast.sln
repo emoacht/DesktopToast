@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopToast", "DesktopToast\DesktopToast.csproj", "{B8D704D5-FB0C-4C2D-8189-72C6649BA157}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopToast.Wpf", "DesktopToast.Wpf\DesktopToast.Wpf.csproj", "{8345EEE8-04C9-4D26-9D6B-53D76D6444C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopToast.WinForms", "DesktopToast.WinForms\DesktopToast.WinForms.csproj", "{4F9E7810-D633-4B44-9B54-262AAF712313}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopToast.Proxy", "DesktopToast.Proxy\DesktopToast.Proxy.csproj", "{F2491193-C066-466B-B4F3-2A0B869B00DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8D704D5-FB0C-4C2D-8189-72C6649BA157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8D704D5-FB0C-4C2D-8189-72C6649BA157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8D704D5-FB0C-4C2D-8189-72C6649BA157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8D704D5-FB0C-4C2D-8189-72C6649BA157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8345EEE8-04C9-4D26-9D6B-53D76D6444C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8345EEE8-04C9-4D26-9D6B-53D76D6444C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8345EEE8-04C9-4D26-9D6B-53D76D6444C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8345EEE8-04C9-4D26-9D6B-53D76D6444C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F9E7810-D633-4B44-9B54-262AAF712313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F9E7810-D633-4B44-9B54-262AAF712313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F9E7810-D633-4B44-9B54-262AAF712313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F9E7810-D633-4B44-9B54-262AAF712313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2491193-C066-466B-B4F3-2A0B869B00DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2491193-C066-466B-B4F3-2A0B869B00DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2491193-C066-466B-B4F3-2A0B869B00DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2491193-C066-466B-B4F3-2A0B869B00DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
