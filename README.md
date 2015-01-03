@@ -18,11 +18,11 @@ A library for toast notifications from desktop app. This library will, if necess
 
  - DesktopToast.Proxy: Sample console app which acts as proxy to this library. This app will accept a request in JSON format from standard input, transfer the request to this library and return the result to standard output.
 
-#Usage
+##Usage
 
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
-ToastRequest class has the following properties:
+ToastRequest class is a container of information necessary for installing a shortcut and showing a toast. It has the following properties:
 
  - ToastHeadline: Toast headline (optional)
  - ToastHeadlineWrapsTwoLines: Whether toast headline wraps across two lines (optional)
