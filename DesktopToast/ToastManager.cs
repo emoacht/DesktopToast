@@ -28,11 +28,11 @@ namespace DesktopToast
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            if (!request.IsToastValid)
-                return ToastResult.Invalid;
-
             if (request.IsShortcutValid)
                 await CheckInstallShortcut(request);
+
+            if (!request.IsToastValid)
+                return ToastResult.Invalid;
 
             var document = PrepareToastDocument(request);
 
@@ -235,21 +235,24 @@ namespace DesktopToast
             var shortcut = new Shortcut();
 
             if (!shortcut.CheckShortcut(
-                shortcutFilePath,
-                request.ShortcutTargetFilePath,
-                request.ShortcutArguments,
-                request.AppId))
+                shortcutPath: shortcutFilePath,
+                targetPath: request.ShortcutTargetFilePath,
+                arguments: request.ShortcutArguments,
+                comment: request.ShortcutComment,
+                workingFolder: request.ShortcutWorkingFolder,
+                windowState: request.ShortcutWindowState,
+                iconPath: request.ShortcutIconFilePath,
+                appId: request.AppId))
             {
-                var shortcutIconFilePath = String.IsNullOrWhiteSpace(request.ShortcutIconFilePath)
-                    ? request.ShortcutTargetFilePath
-                    : request.ShortcutIconFilePath;
-
                 shortcut.InstallShortcut(
-                    shortcutFilePath,
-                    request.ShortcutTargetFilePath,
-                    request.ShortcutArguments,
-                    request.AppId,
-                    shortcutIconFilePath);
+                    shortcutPath: shortcutFilePath,
+                    targetPath: request.ShortcutTargetFilePath,
+                    arguments: request.ShortcutArguments,
+                    comment: request.ShortcutComment,
+                    workingFolder: request.ShortcutWorkingFolder,
+                    windowState: request.ShortcutWindowState,
+                    iconPath: request.ShortcutIconFilePath,
+                    appId: request.AppId);
 
                 await Task.Delay((TimeSpan.Zero < request.WaitingTime) ? request.WaitingTime : waitingTime);
             }

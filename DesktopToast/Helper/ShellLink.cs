@@ -400,10 +400,10 @@ namespace DesktopToast.Helper
         {
             get
             {
-                string str;
-                this.PersistFile.GetCurFile(out str);
+                string buff;
+                this.PersistFile.GetCurFile(out buff);
 
-                return str;
+                return buff;
             }
         }
 
@@ -423,8 +423,8 @@ namespace DesktopToast.Helper
             }
             set
             {
-                if (MAX_PATH - 1 < value.Length)
-                    throw new Exception("Target path is too long.");
+                if ((value != null) && (MAX_PATH - 1 < value.Length))
+                    throw new ArgumentException("Target file path is too long.", "TargetPath");
 
                 VerifySucceeded(this.shellLink.SetPath(value));
             }
@@ -456,9 +456,9 @@ namespace DesktopToast.Helper
         /// <summary>
         /// Description
         /// </summary>
-        /// <remarks>According to MSDN, this length is limited to INFOTIPSIZE. However, 
-        /// in practice, there seems to be the same limitation as the maximum path length limitation. 
-        /// Moreover, Description longer than the limitation will screw up arguments.</remarks>
+        /// <remarks>According to MSDN, this length is limited to INFOTIPSIZE. However, in practice, 
+        /// there seems to be the same limitation as the maximum path length limitation. Moreover, 
+        /// Description longer than the limitation will screw up arguments.</remarks>
         internal string Description
         {
             get
@@ -470,8 +470,8 @@ namespace DesktopToast.Helper
             }
             set
             {
-                if (MAX_PATH < value.Length)
-                    throw new Exception("Description is too long.");
+                if ((value != null) && (MAX_PATH < value.Length))
+                    throw new ArgumentException("Description is too long.", "Description");
 
                 VerifySucceeded(this.shellLink.SetDescription(value));
             }
@@ -492,8 +492,8 @@ namespace DesktopToast.Helper
             }
             set
             {
-                if (MAX_PATH - 1 < value.Length)
-                    throw new Exception("Working directory is too long.");
+                if ((value != null) && (MAX_PATH - 1 < value.Length))
+                    throw new ArgumentException("Working directory is too long.", "WorkingDirectory");
 
                 VerifySucceeded(this.shellLink.SetWorkingDirectory(value));
             }
@@ -533,8 +533,8 @@ namespace DesktopToast.Helper
             }
             set
             {
-                if (MAX_PATH - 1 < value.Length)
-                    throw new Exception("Path of shortcut icon is too long.");
+                if ((value != null) && (MAX_PATH - 1 < value.Length))
+                    throw new ArgumentException("Shortcut icon file path is too long.", "IconPath");
 
                 VerifySucceeded(this.shellLink.SetIconLocation(value, IconIndex));
             }
@@ -566,9 +566,9 @@ namespace DesktopToast.Helper
         /// </summary>
         /// <remarks>According to MSDN, an AppUserModelID must be in the following form. 
         /// CompanyName.ProductName.SubProduct.VersionInformation 
-        /// It can have no more than 128 characters and cannot contain spaces. Each section should 
-        /// be camel-cased. CompanyName and ProductName should always be used, while the SubProduct 
-        /// and VersionInformation are optional.</remarks>
+        /// It can have no more than 128 characters and cannot contain white-spaces. Each section should 
+        /// be camel-cased. CompanyName and ProductName should always be used, while the SubProduct and 
+        /// VersionInformation are optional.</remarks>
         internal string AppUserModelID
         {
             get
@@ -582,10 +582,11 @@ namespace DesktopToast.Helper
             }
             set
             {
-                if (128 < value.Length)
-                    throw new Exception("AppUserModelID is too long.");
+                var buff = value ?? String.Empty;
+                if (128 < buff.Length)
+                    throw new ArgumentException("AppUserModelID is too long.", "AppUserModelID");
 
-                using (var pv = new PropVariant(value))
+                using (var pv = new PropVariant(buff))
                 {
                     VerifySucceeded(this.PropertyStore.SetValue(this.AppUserModelIDKey, pv));
                     VerifySucceeded(this.PropertyStore.Commit());

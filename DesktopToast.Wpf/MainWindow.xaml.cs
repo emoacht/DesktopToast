@@ -39,9 +39,9 @@ namespace DesktopToast.Wpf
                 ToastHeadline = "DesktopToast WPF Sample",
                 ToastBody = "This is a toast test.",
                 ToastImageFilePath = toastImageFilePath,
-                AppId = "DesktopToast.Wpf",
                 ShortcutFileName = "DesktopToast.Wpf.lnk",
                 ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+                AppId = "DesktopToast.Wpf",
             };
 
             var result = await ToastManager.ShowAsync(request);

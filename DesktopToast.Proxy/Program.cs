@@ -18,11 +18,12 @@ namespace DesktopToast.Proxy
             {
 #if DEBUG
                 requestString = @"{
-""AppId"":""DesktopToast.Proxy"",
 ""ShortcutFileName"":""DesktopToast.Proxy.lnk"",
 ""ShortcutTargetFilePath"":""C:\\DesktopToast.Proxy.exe"",
-""ToastBody"":""This is a toast test."",
 ""ToastHeadline"":""DesktopToast Proxy Sample"",
+""ToastHeadlineWrapsTwoLines"":true,
+""ToastBody"":""This is a toast test."",
+""AppId"":""DesktopToast.Proxy"",
 }";
 #endif
 #if !DEBUG

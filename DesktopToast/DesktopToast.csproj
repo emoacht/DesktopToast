@@ -54,6 +54,7 @@
     <Compile Include="Helper\ShellLink.cs" />
     <Compile Include="Helper\Shortcut.cs" />
     <Compile Include="Helper\StringExtension.cs" />
+    <Compile Include="ShortcutWindowState.cs" />
     <Compile Include="ToastAudio.cs" />
     <Compile Include="ToastManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,9 +11,21 @@ namespace DesktopToast.Helper
         /// <param name="shortcutPath">Shortcut file path</param>
         /// <param name="targetPath">Target file path of shortcut</param>
         /// <param name="arguments">Arguments of shortcut</param>
+        /// <param name="comment">Comment of shortcut</param>
+        /// <param name="workingFolder">Working folder of shortcut</param>
+        /// <param name="windowState">Window state of shortcut</param>
+        /// <param name="iconPath">Icon file path of shortcut</param>
         /// <param name="appId">AppUserModelID of shortcut</param>
         /// <returns>True if exists</returns>
-        public bool CheckShortcut(string shortcutPath, string targetPath, string arguments, string appId)
+        public bool CheckShortcut(
+            string shortcutPath,
+            string targetPath,
+            string arguments,
+            string comment,
+            string workingFolder,
+            ShortcutWindowState windowState,
+            string iconPath,
+            string appId)
         {
             if (!File.Exists(shortcutPath))
                 return false;
@@ -23,6 +35,10 @@ namespace DesktopToast.Helper
                 // File path casing may be different from that when installed the shortcut file.
                 return (shellLink.TargetPath.EqualsOrIsNullOrEmpty(targetPath, StringComparison.OrdinalIgnoreCase) &&
                     shellLink.Arguments.EqualsOrIsNullOrEmpty(arguments, StringComparison.Ordinal) &&
+                    shellLink.Description.EqualsOrIsNullOrEmpty(comment, StringComparison.Ordinal) &&
+                    shellLink.WorkingDirectory.EqualsOrIsNullOrEmpty(workingFolder, StringComparison.OrdinalIgnoreCase) &&
+                    (shellLink.WindowStyle == ConvertWindowState(windowState)) &&
+                    shellLink.IconPath.EqualsOrIsNullOrEmpty(iconPath, StringComparison.OrdinalIgnoreCase) &&
                     shellLink.AppUserModelID.EqualsOrIsNullOrEmpty(appId, StringComparison.Ordinal));
             }
         }
@@ -33,9 +49,20 @@ namespace DesktopToast.Helper
         /// <param name="shortcutPath">Shortcut file path</param>
         /// <param name="targetPath">Target file path of shortcut</param>
         /// <param name="arguments">Arguments of shortcut</param>
-        /// <param name="appId">AppUserModelID of shortcut</param>
+        /// <param name="comment">Comment of shortcut</param>
+        /// <param name="workingFolder">Working folder of shortcut</param>
+        /// <param name="windowState">Window state of shortcut</param>
         /// <param name="iconPath">Icon file path of shortcut</param>
-        public void InstallShortcut(string shortcutPath, string targetPath, string arguments, string appId, string iconPath)
+        /// <param name="appId">AppUserModelID of shortcut</param>
+        public void InstallShortcut(
+            string shortcutPath,
+            string targetPath,
+            string arguments,
+            string comment,
+            string workingFolder,
+            ShortcutWindowState windowState,
+            string iconPath,
+            string appId)
         {
             if (String.IsNullOrWhiteSpace(shortcutPath))
                 throw new ArgumentNullException("shortcutPath");
@@ -44,10 +71,12 @@ namespace DesktopToast.Helper
             {
                 TargetPath = targetPath,
                 Arguments = arguments,
-                AppUserModelID = appId,
+                Description = comment,
+                WorkingDirectory = workingFolder,
+                WindowStyle = ConvertWindowState(windowState),
                 IconPath = iconPath,
                 IconIndex = 0, // 1st icon in the file
-                WindowStyle = ShellLink.SW.SW_SHOWNORMAL,
+                AppUserModelID = appId,
             })
             {
                 shellLink.Save(shortcutPath);
@@ -60,14 +89,54 @@ namespace DesktopToast.Helper
         /// <param name="shortcutPath">Shortcut file path</param>
         /// <param name="targetPath">Target file path of shortcut</param>
         /// <param name="arguments">Arguments of shortcut</param>
+        /// <param name="comment">Comment of shortcut</param>
+        /// <param name="workingFolder">Working folder of shortcut</param>
+        /// <param name="windowState">Window state of shortcut</param>
+        /// <param name="iconPath">Icon file path of shortcut</param>
         /// <param name="appId">AppUserModelID of shortcut</param>
-        /// <remarks>If contents of shortcut does not match the shortcut file will not be deleted.</remarks>
-        public void DeleteShortcut(string shortcutPath, string targetPath, string arguments, string appId)
+        /// <remarks>If contents of shortcut do not match, the shortcut file will not be deleted.</remarks>
+        public void DeleteShortcut(
+            string shortcutPath,
+            string targetPath,
+            string arguments,
+            string comment,
+            string workingFolder,
+            ShortcutWindowState windowState,
+            string iconPath,
+            string appId)
         {
-            if (!CheckShortcut(shortcutPath, targetPath, arguments, appId))
+            if (!CheckShortcut(
+                shortcutPath: shortcutPath,
+                targetPath: targetPath,
+                arguments: arguments,
+                comment: comment,
+                workingFolder: workingFolder,
+                windowState: windowState,
+                iconPath: iconPath,
+                appId: appId))
                 return;
 
             File.Delete(shortcutPath);
         }
+
+
+        #region Helper
+
+        private ShellLink.SW ConvertWindowState(ShortcutWindowState windowState)
+        {
+            switch (windowState)
+            {
+                case ShortcutWindowState.Maximized:
+                    return ShellLink.SW.SW_SHOWMAXIMIZED;
+
+                case ShortcutWindowState.Minimized:
+                    return ShellLink.SW.SW_SHOWMINNOACTIVE;
+
+                default:
+                    return ShellLink.SW.SW_SHOWNORMAL;
+            }
+        }
+
+        #endregion
     }
 }

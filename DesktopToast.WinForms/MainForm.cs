@@ -31,9 +31,9 @@ namespace DesktopToast.WinForms
                 ToastBody = "This is a toast test.",
                 ToastBodyExtra = "Looping sound will be played.",
                 ToastAudio = ToastAudio.LoopingCall,
-                AppId = "DesktopToast.WinForms",
                 ShortcutFileName = "DesktopToast.WinForms.lnk",
                 ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+                AppId = "DesktopToast.WinForms",
             };
 
             var result = await ToastManager.ShowAsync(request);

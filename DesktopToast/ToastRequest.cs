@@ -23,7 +23,7 @@ namespace DesktopToast
         public string ToastHeadline { get; set; }
 
         /// <summary>
-        /// Whether toast headline wraps across two lines (optional) 
+        /// Whether toast headline wraps across two lines (optional)
         /// </summary>
         [DataMember]
         public bool ToastHeadlineWrapsTwoLines { get; set; }
@@ -53,7 +53,7 @@ namespace DesktopToast
         public string ToastImageFilePath { get; set; }
 
         /// <summary>
-        /// Toast audio (optional)
+        /// Toast audio type (optional)
         /// </summary>
         [DataMember]
         public ToastAudio ToastAudio { get; set; }
@@ -69,14 +69,7 @@ namespace DesktopToast
         /// </summary>
         [DataMember]
         public string ShortcutTargetFilePath { get; set; }
-
-        /// <summary>
-        /// Icon file path of shortcut (optional) 
-        /// </summary>
-        /// <remarks>If not specified, target file path will be used.</remarks>
-        [DataMember]
-        public string ShortcutIconFilePath { get; set; }
-
+        
         /// <summary>
         /// Arguments of shortcut (optional)
         /// </summary>
@@ -84,12 +77,47 @@ namespace DesktopToast
         public string ShortcutArguments { get; set; }
 
         /// <summary>
+        /// Comment of shortcut (optional)
+        /// </summary>
+        [DataMember]
+        public string ShortcutComment { get; set; }
+
+        /// <summary>
+        /// Working folder of shortcut (optional)
+        /// </summary>
+        [DataMember]
+        public string ShortcutWorkingFolder { get; set; }
+
+        /// <summary>
+        /// Window state of shortcut (optional)
+        /// </summary>
+        [DataMember]
+        public ShortcutWindowState ShortcutWindowState { get; set; }
+
+        /// <summary>
+        /// Icon file path of shortcut (optional)
+        /// </summary>
+        /// <remarks>If not specified, target file path will be used.</remarks>
+        [DataMember]
+        public string ShortcutIconFilePath
+        {
+            get
+            {
+                return !String.IsNullOrWhiteSpace(_shortcutIconFilePath)
+                    ? _shortcutIconFilePath
+                    : ShortcutTargetFilePath;
+            }
+            set { _shortcutIconFilePath = value; }
+        }
+        private string _shortcutIconFilePath;
+
+        /// <summary>
         /// AppUserModelID of application (required)
         /// </summary>
         /// <renarks>
         /// The AppUserModelID must be in the following form. 
         /// CompanyName.ProductName.SubProduct.VersionInformation 
-        /// It can have no more than 128 characters and cannot contain spaces.
+        /// It can have no more than 128 characters and cannot contain white-spaces.
         /// </renarks>
         [DataMember]
         public string AppId { get; set; }
