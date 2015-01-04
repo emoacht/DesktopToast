@@ -23,6 +23,7 @@ A library for toast notifications from desktop app. This library will, if necess
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
 ToastRequest class is a container of information necessary for installing a shortcut and showing a toast. It has the following properties:
+
 | Property                   | Description                                                                     | Note                  |
 |----------------------------|---------------------------------------------------------------------------------|-----------------------|
 | ToastHeadline              | Toast headline                                                                  | Optional              |
