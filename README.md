@@ -23,24 +23,23 @@ A library for toast notifications from desktop app. This library will, if necess
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
 ToastRequest class is a container of information necessary for installing a shortcut and showing a toast. It has the following properties:
-
- - ToastHeadline: Toast headline (optional)
- - ToastHeadlineWrapsTwoLines: Whether toast headline wraps across two lines (optional)
- - ToastBody: Toast body (required for toast)
- - ToastBodyExtra: Toast body extra section (optional)
- - ToastImageFilePath: Toast image file path (optional)
- - ToastAudio: Toast audio type (optional)
-
- - ShortcutFileName: Shortcut file name to be installed in Windows startup (required for shortcut)
- - ShortcutTargetFilePath: Target file path of shortcut (required for shortcut)
- - ShortcutArguments: Arguments of shortcut (optional)
- - ShortcutComment: Comment of shortcut (optional)
- - ShortcutWorkingFolder: Working folder of shortcut (optional)
- - ShortcutWindowState: Window state of shortcut (optional)
- - ShortcutIconFilePath: Icon file path of shortcut (optional)
-
- - AppId: AppUserModelID of application (required)
- - WaitingTime: Waiting time length before showing a toast after the shortcut file is installed (optional)
+| Property                   | Description                                                                     | Note                  |
+|----------------------------|---------------------------------------------------------------------------------|-----------------------|
+| ToastHeadline              | Toast headline                                                                  | Optional              |
+| ToastHeadlineWrapsTwoLines | Whether toast headline wraps across two lines                                   | Optional              |
+| ToastBody                  | Toast body                                                                      | Required for toast    |
+| ToastBodyExtra             | Toast body extra section                                                        | Optional              |
+| ToastImageFilePath         | Toast image file path                                                           | Optional              |
+| ToastAudio                 | Toast audio type                                                                | Optional              |
+| ShortcutFileName           | Shortcut file name to be installed in Windows startup                           | Required for shortcut |
+| ShortcutTargetFilePath     | Target file path of shortcut                                                    | Required for shortcut |
+| ShortcutArguments          | Arguments of shortcut                                                           | Optional              |
+| ShortcutComment            | Comment of shortcut                                                             | Optional              |
+| ShortcutWorkingFolder      | Working folder of shortcut                                                      | Optional              |
+| ShortcutWindowState        | Window state of shortcut                                                        | Optional              |
+| ShortcutIconFilePath       | Icon file path of shortcut                                                      | Optional              |
+| AppId                      | AppUserModelID of application                                                   | Required              |
+| WaitingTime                | Waiting time length before showing a toast after the shortcut file is installed | Optional              |
 
 ##Other
 
