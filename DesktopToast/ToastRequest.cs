@@ -46,7 +46,7 @@ namespace DesktopToast
         /// Toast image file path (optional)
         /// </summary>
         /// <remarks>
-        /// The image file path must be in the following form.
+        /// The image file path must be in the following form:
         /// "file:///" + full file path
         /// </remarks>
         [DataMember]
@@ -114,11 +114,13 @@ namespace DesktopToast
         /// <summary>
         /// AppUserModelID of application (required)
         /// </summary>
-        /// <renarks>
-        /// The AppUserModelID must be in the following form. 
+        /// <remarks>
+        /// An AppUserModelID must be in the following form:
         /// CompanyName.ProductName.SubProduct.VersionInformation 
-        /// It can have no more than 128 characters and cannot contain white-spaces.
-        /// </renarks>
+        /// It can have no more than 128 characters and cannot contain spaces. Each section should be 
+        /// camel-cased. CompanyName and ProductName should always be used, while SubProduct and 
+        /// VersionInformation are optional.
+        /// </remarks>
         [DataMember]
         public string AppId { get; set; }
 

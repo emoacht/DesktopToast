@@ -32,13 +32,13 @@ namespace DesktopToast.Helper
         }
 
         /// <summary>
-        /// Determine if specified strings are equal or both strings are null or empty.
+        /// Determine if specified strings are null or empty or the strings are equal.
         /// </summary>
         /// <param name="a">String to compare</param>
         /// <param name="b">String to compare</param>
         /// <param name="comparisonType">StringComparison</param>
-        /// <returns>True if the strings are equal or both strings are null or empty</returns>
-        public static bool EqualsOrIsNullOrEmpty(this string a, string b, StringComparison comparisonType)
+        /// <returns>True if the strings are null or empty or the strings are equal</returns>
+        public static bool IsNullOrEmptyOrEquals(this string a, string b, StringComparison comparisonType)
         {
             if (String.IsNullOrEmpty(a))
                 return String.IsNullOrEmpty(b);

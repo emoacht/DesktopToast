@@ -33,13 +33,13 @@ namespace DesktopToast.Helper
             using (var shellLink = new ShellLink(shortcutPath))
             {
                 // File path casing may be different from that when installed the shortcut file.
-                return (shellLink.TargetPath.EqualsOrIsNullOrEmpty(targetPath, StringComparison.OrdinalIgnoreCase) &&
-                    shellLink.Arguments.EqualsOrIsNullOrEmpty(arguments, StringComparison.Ordinal) &&
-                    shellLink.Description.EqualsOrIsNullOrEmpty(comment, StringComparison.Ordinal) &&
-                    shellLink.WorkingDirectory.EqualsOrIsNullOrEmpty(workingFolder, StringComparison.OrdinalIgnoreCase) &&
+                return (shellLink.TargetPath.IsNullOrEmptyOrEquals(targetPath, StringComparison.OrdinalIgnoreCase) &&
+                    shellLink.Arguments.IsNullOrEmptyOrEquals(arguments, StringComparison.Ordinal) &&
+                    shellLink.Description.IsNullOrEmptyOrEquals(comment, StringComparison.Ordinal) &&
+                    shellLink.WorkingDirectory.IsNullOrEmptyOrEquals(workingFolder, StringComparison.OrdinalIgnoreCase) &&
                     (shellLink.WindowStyle == ConvertWindowState(windowState)) &&
-                    shellLink.IconPath.EqualsOrIsNullOrEmpty(iconPath, StringComparison.OrdinalIgnoreCase) &&
-                    shellLink.AppUserModelID.EqualsOrIsNullOrEmpty(appId, StringComparison.Ordinal));
+                    shellLink.IconPath.IsNullOrEmptyOrEquals(iconPath, StringComparison.OrdinalIgnoreCase) &&
+                    shellLink.AppUserModelID.IsNullOrEmptyOrEquals(appId, StringComparison.Ordinal));
             }
         }
 

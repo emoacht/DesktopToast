@@ -433,9 +433,13 @@ namespace DesktopToast.Helper
         /// <summary>
         /// Arguments
         /// </summary>
-        /// <remarks>According to MSDN, this length should not have a limitation as long as it in Unicode. 
+        /// <remarks>
+        /// <para>According to MSDN, this length should not have a limitation as long as it in Unicode. 
         /// In addition, it is recommended to retrieve argument strings though IPropertyStore rather than 
-        /// GetArguments method.</remarks>
+        /// GetArguments method.</para>
+        /// <para>The setter accepts Null while the getter never returns Null. This behavior is the same 
+        /// as other properties by IShellLink.</para>
+        /// </remarks>
         internal string Arguments
         {
             get
@@ -564,11 +568,15 @@ namespace DesktopToast.Helper
         /// <summary>
         /// AppUserModelID (to be used for Windows 7 or newer).
         /// </summary>
-        /// <remarks>According to MSDN, an AppUserModelID must be in the following form. 
+        /// <remarks>
+        /// <para>According to MSDN, an AppUserModelID must be in the following form:
         /// CompanyName.ProductName.SubProduct.VersionInformation 
-        /// It can have no more than 128 characters and cannot contain white-spaces. Each section should 
-        /// be camel-cased. CompanyName and ProductName should always be used, while the SubProduct and 
-        /// VersionInformation are optional.</remarks>
+        /// It can have no more than 128 characters and cannot contain spaces. Each section should be 
+        /// camel-cased. CompanyName and ProductName should always be used, while SubProduct and 
+        /// VersionInformation are optional.</para>
+        /// <para>The setter accepts Null while the getter never returns Null. This behavior is the same 
+        /// as other properties by IShellLink.</para>
+        /// </remarks>
         internal string AppUserModelID
         {
             get
