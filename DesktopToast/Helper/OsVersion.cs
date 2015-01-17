@@ -2,6 +2,9 @@
 
 namespace DesktopToast.Helper
 {
+    /// <summary>
+    /// OS version information
+    /// </summary>
     internal class OsVersion
     {
         #region Win32

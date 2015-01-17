@@ -3,6 +3,9 @@ using System.IO;
 
 namespace DesktopToast.Helper
 {
+    /// <summary>
+    /// Shortcut management
+    /// </summary>
     internal class Shortcut
     {
         /// <summary>

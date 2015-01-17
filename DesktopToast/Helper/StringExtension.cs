@@ -3,6 +3,9 @@ using System.Text;
 
 namespace DesktopToast.Helper
 {
+    /// <summary>
+    /// Extension method for <see cref="String"/>
+    /// </summary>
     internal static class StringExtension
     {
         /// <summary>
