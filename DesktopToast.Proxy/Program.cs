@@ -9,7 +9,7 @@ namespace DesktopToast.Proxy
 {
     class Program
     {
-        static string resultString = null;
+        static string _resultString = null;
 
         static void Main(string[] args)
         {
@@ -33,19 +33,19 @@ namespace DesktopToast.Proxy
 
             var showToastTask = ShowToastAsync(requestString);
 
-            while (resultString == null)
+            while (_resultString == null)
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(100));
             }
 
-            Console.WriteLine(resultString);
+            Console.WriteLine(_resultString);
         }
 
         static async Task ShowToastAsync(string requestString)
         {
             var result = await ToastManager.ShowAsync(requestString);
 
-            resultString = result.ToString();
+            _resultString = result.ToString();
         }
     }
 }

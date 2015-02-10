@@ -221,7 +221,7 @@ namespace DesktopToast
         /// Waiting time length before showing a toast after the shortcut file is installed
         /// </summary>
         /// <remarks>It seems that roughly 3 seconds are required.</remarks>
-        private static readonly TimeSpan waitingTime = TimeSpan.FromSeconds(3);
+        private static readonly TimeSpan _waitingTime = TimeSpan.FromSeconds(3);
 
         /// <summary>
         /// Check and install shortcut in Windows startup.
@@ -254,7 +254,7 @@ namespace DesktopToast
                     iconPath: request.ShortcutIconFilePath,
                     appId: request.AppId);
 
-                await Task.Delay((TimeSpan.Zero < request.WaitingTime) ? request.WaitingTime : waitingTime);
+                await Task.Delay((TimeSpan.Zero < request.WaitingTime) ? request.WaitingTime : _waitingTime);
             }
         }
 
