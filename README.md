@@ -42,6 +42,6 @@ ToastRequest class is a container of information necessary for installing a shor
 | AppId                      | AppUserModelID of application                                                   | Required              |
 | WaitingTime                | Waiting time length before showing a toast after the shortcut file is installed | Optional              |
 
-##Other
+##License
 
- - License: MIT License
+ - MIT License
