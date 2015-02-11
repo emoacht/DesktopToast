@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace DesktopToast.Proxy
 {
-    class Program
-    {
-        static string _resultString = null;
+	class Program
+	{
+		static string _resultString = null;
 
-        static void Main(string[] args)
-        {
-            var requestString = args.Any() ? args[0] : null;
-            if (requestString == null)
-            {
+		static void Main(string[] args)
+		{
+			var requestString = args.Any() ? args[0] : null;
+			if (requestString == null)
+			{
 #if DEBUG
-                requestString = @"{
+				requestString = @"{
 ""ShortcutFileName"":""DesktopToast.Proxy.lnk"",
 ""ShortcutTargetFilePath"":""C:\\DesktopToast.Proxy.exe"",
 ""ToastHeadline"":""DesktopToast Proxy Sample"",
@@ -27,25 +27,25 @@ namespace DesktopToast.Proxy
 }";
 #endif
 #if !DEBUG
-                return;
+				return;
 #endif
-            }
+			}
 
-            var showToastTask = ShowToastAsync(requestString);
+			var showToastTask = ShowToastAsync(requestString);
 
-            while (_resultString == null)
-            {
-                Thread.Sleep(TimeSpan.FromMilliseconds(100));
-            }
+			while (_resultString == null)
+			{
+				Thread.Sleep(TimeSpan.FromMilliseconds(100));
+			}
 
-            Console.WriteLine(_resultString);
-        }
+			Console.WriteLine(_resultString);
+		}
 
-        static async Task ShowToastAsync(string requestString)
-        {
-            var result = await ToastManager.ShowAsync(requestString);
+		static async Task ShowToastAsync(string requestString)
+		{
+			var result = await ToastManager.ShowAsync(requestString);
 
-            _resultString = result.ToString();
-        }
-    }
+			_resultString = result.ToString();
+		}
+	}
 }

@@ -1,22 +1,22 @@
 ﻿<Window x:Class="DesktopToast.Wpf.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DesktopToast WPF Sample"
-        Width="320" Height="90"
-        x:Name="WindowRoot"
-        ResizeMode="NoResize" SizeToContent="Height"
-        Icon="Resources/Toast.ico">
-    <Grid>
-        <StackPanel>
-            <Button Height="30"
-                    FontSize="14"
-                    Content="Show a toast"
-                    Click="Button_ShowToast_Click"/>
-            <TextBox Height="30"
-                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                     Background="White"
-                     IsReadOnly="True"
-                     Text="{Binding ToastResult, ElementName=WindowRoot}"/>
-        </StackPanel>
-    </Grid>
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Title="DesktopToast WPF Sample"
+		Width="320" Height="90"
+		x:Name="WindowRoot"
+		ResizeMode="NoResize" SizeToContent="Height"
+		Icon="Resources/Toast.ico">
+	<Grid>
+		<StackPanel>
+			<Button Height="30"
+					FontSize="14"
+					Content="Show a toast"
+					Click="Button_ShowToast_Click"/>
+			<TextBox Height="30"
+					 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+					 Background="White"
+					 IsReadOnly="True"
+					 Text="{Binding ToastResult, ElementName=WindowRoot}"/>
+		</StackPanel>
+	</Grid>
 </Window>
