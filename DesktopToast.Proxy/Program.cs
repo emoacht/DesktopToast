@@ -9,8 +9,6 @@ namespace DesktopToast.Proxy
 {
 	class Program
 	{
-		static string _resultString = null;
-
 		static void Main(string[] args)
 		{
 			var requestString = args.Any() ? args[0] : null;
@@ -31,21 +29,9 @@ namespace DesktopToast.Proxy
 #endif
 			}
 
-			var showToastTask = ShowToastAsync(requestString);
-
-			while (_resultString == null)
-			{
-				Thread.Sleep(TimeSpan.FromMilliseconds(100));
-			}
-
-			Console.WriteLine(_resultString);
-		}
-
-		static async Task ShowToastAsync(string requestString)
-		{
-			var result = await ToastManager.ShowAsync(requestString);
-
-			_resultString = result.ToString();
+			ToastManager.ShowAsync(requestString)
+				.ContinueWith(result => Console.WriteLine(result))
+				.Wait();
 		}
 	}
 }
