@@ -59,7 +59,7 @@ namespace DesktopToast
 		public ToastAudio ToastAudio { get; set; }
 
 		/// <summary>
-		/// Shortcut file name to be installed in Windows startup (required for shortcut)
+		/// Shortcut file name to be installed in Start menu (required for shortcut)
 		/// </summary>
 		[DataMember]
 		public string ShortcutFileName { get; set; }
@@ -116,9 +116,9 @@ namespace DesktopToast
 		/// </summary>
 		/// <remarks>
 		/// An AppUserModelID must be in the following form:
-		/// CompanyName.ProductName.SubProduct.VersionInformation 
-		/// It can have no more than 128 characters and cannot contain spaces. Each section should be 
-		/// camel-cased. CompanyName and ProductName should always be used, while SubProduct and 
+		/// CompanyName.ProductName.SubProduct.VersionInformation
+		/// It can have no more than 128 characters and cannot contain spaces. Each section should be
+		/// camel-cased. CompanyName and ProductName should always be used, while SubProduct and
 		/// VersionInformation are optional.
 		/// </remarks>
 		[DataMember]

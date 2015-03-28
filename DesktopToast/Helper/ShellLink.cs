@@ -185,7 +185,7 @@ namespace DesktopToast.Helper
 			#region Field
 
 			[FieldOffset(0)]
-			private ushort valueType; // Value type 
+			private ushort valueType; // Value type
 
 			// [FieldOffset(2)]
 			// private ushort wReserved1; // Reserved field
@@ -434,10 +434,10 @@ namespace DesktopToast.Helper
 		/// Arguments
 		/// </summary>
 		/// <remarks>
-		/// <para>According to MSDN, this length should not have a limitation as long as it in Unicode. 
-		/// In addition, it is recommended to retrieve argument strings though IPropertyStore rather than 
+		/// <para>According to MSDN, this length should not have a limitation as long as it in Unicode.
+		/// In addition, it is recommended to retrieve argument strings though IPropertyStore rather than
 		/// GetArguments method.</para>
-		/// <para>The setter accepts Null while the getter never returns Null. This behavior is the same 
+		/// <para>The setter accepts Null while the getter never returns Null. This behavior is the same
 		/// as other properties by IShellLink.</para>
 		/// </remarks>
 		internal string Arguments
@@ -460,8 +460,8 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// Description
 		/// </summary>
-		/// <remarks>According to MSDN, this length is limited to INFOTIPSIZE. However, in practice, 
-		/// there seems to be the same limitation as the maximum path length limitation. Moreover, 
+		/// <remarks>According to MSDN, this length is limited to INFOTIPSIZE. However, in practice,
+		/// there seems to be the same limitation as the maximum path length limitation. Moreover,
 		/// Description longer than the limitation will screw up arguments.</remarks>
 		internal string Description
 		{
@@ -570,11 +570,11 @@ namespace DesktopToast.Helper
 		/// </summary>
 		/// <remarks>
 		/// <para>According to MSDN, an AppUserModelID must be in the following form:
-		/// CompanyName.ProductName.SubProduct.VersionInformation 
-		/// It can have no more than 128 characters and cannot contain spaces. Each section should be 
-		/// camel-cased. CompanyName and ProductName should always be used, while SubProduct and 
+		/// CompanyName.ProductName.SubProduct.VersionInformation
+		/// It can have no more than 128 characters and cannot contain spaces. Each section should be
+		/// camel-cased. CompanyName and ProductName should always be used, while SubProduct and
 		/// VersionInformation are optional.</para>
-		/// <para>The setter accepts Null while the getter never returns Null. This behavior is the same 
+		/// <para>The setter accepts Null while the getter never returns Null. This behavior is the same
 		/// as other properties by IShellLink.</para>
 		/// </remarks>
 		internal string AppUserModelID
@@ -681,7 +681,7 @@ namespace DesktopToast.Helper
 
 		/// <summary>
 		/// Save shortcut file.
-		/// </summary> 
+		/// </summary>
 		internal void Save()
 		{
 			this.Save(this.ShortcutPath);

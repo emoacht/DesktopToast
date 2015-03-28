@@ -224,13 +224,15 @@ namespace DesktopToast
 		private static readonly TimeSpan _waitingTime = TimeSpan.FromSeconds(3);
 
 		/// <summary>
-		/// Check and install shortcut in Windows startup.
+		/// Check and install a shortcut file in Start menu.
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		private static async Task CheckInstallShortcut(ToastRequest request)
 		{
-			var shortcutFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), // Not CommonStartMenu
-				"Programs", request.ShortcutFileName);
+			var shortcutFilePath = Path.Combine(
+				Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), // Not CommonStartMenu
+				"Programs",
+				request.ShortcutFileName);
 
 			var shortcut = new Shortcut();
 
