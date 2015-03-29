@@ -125,7 +125,7 @@ namespace DesktopToast.Helper
 
 		#region Helper
 
-		private ShellLink.SW ConvertWindowState(ShortcutWindowState windowState)
+		private static ShellLink.SW ConvertWindowState(ShortcutWindowState windowState)
 		{
 			switch (windowState)
 			{
