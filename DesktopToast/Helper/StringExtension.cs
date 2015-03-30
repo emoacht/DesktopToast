@@ -11,8 +11,8 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// Convert camel-cased string to camel-cased string with separator.
 		/// </summary>
-		/// <param name="source">Source String</param>
-		/// <param name="separator">Separator Char</param>
+		/// <param name="source">Source string</param>
+		/// <param name="separator">Separator char</param>
 		/// <returns>String with separator</returns>
 		public static string ToCamelWithSeparator(this string source, char separator)
 		{
