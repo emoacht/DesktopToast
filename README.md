@@ -22,6 +22,25 @@ A library for toast notifications from desktop app. This library will, if necess
 
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
+```charp
+public async Task<bool> ShowToastAsync()
+{
+    var request = new ToastRequest
+    {
+        ToastHeadline = "DesktopToast WPF Sample",
+        ToastBody = "This is a toast test.",
+        ToastImageFilePath = String.Format("file:///{0}", Path.GetFullPath("toast128.png")),
+        ShortcutFileName = "DesktopToast.Wpf.lnk",
+        ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+        AppId = "DesktopToast.Wpf",
+    };
+
+    var result = await ToastManager.ShowAsync(request);
+
+    return (result == ToastResult.Activated);
+}
+```
+
 ToastRequest class is a container of information necessary for installing a shortcut and showing a toast. It has the following properties:
 
 | Property                   | Description                                                                     | Note                  |
