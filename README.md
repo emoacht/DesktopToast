@@ -22,7 +22,7 @@ A library for toast notifications from desktop app. This library will, if necess
 
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
-```charp
+```csharp
 public async Task<bool> ShowToastAsync()
 {
     var request = new ToastRequest
