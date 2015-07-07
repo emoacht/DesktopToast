@@ -125,10 +125,10 @@ namespace DesktopToast
 		public string AppId { get; set; }
 
 		/// <summary>
-		/// Waiting time length before showing a toast after the shortcut file is installed (optional)
+		/// Waiting duration before showing a toast after the shortcut file is installed (optional)
 		/// </summary>
 		[DataMember]
-		public TimeSpan WaitingTime { get; set; }
+		public TimeSpan WaitingDuration { get; set; }
 
 		#endregion
 

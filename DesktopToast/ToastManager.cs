@@ -218,10 +218,10 @@ namespace DesktopToast
 		#region Shortcut
 
 		/// <summary>
-		/// Waiting time length before showing a toast after the shortcut file is installed
+		/// Waiting duration before showing a toast after the shortcut file is installed
 		/// </summary>
 		/// <remarks>It seems that roughly 3 seconds are required.</remarks>
-		private static readonly TimeSpan _waitingTime = TimeSpan.FromSeconds(3);
+		private static readonly TimeSpan _waitingDuration = TimeSpan.FromSeconds(3);
 
 		/// <summary>
 		/// Check and install a shortcut file in Start menu.
@@ -256,7 +256,7 @@ namespace DesktopToast
 					iconPath: request.ShortcutIconFilePath,
 					appId: request.AppId);
 
-				await Task.Delay((TimeSpan.Zero < request.WaitingTime) ? request.WaitingTime : _waitingTime);
+				await Task.Delay((TimeSpan.Zero < request.WaitingDuration) ? request.WaitingDuration : _waitingDuration);
 			}
 		}
 
