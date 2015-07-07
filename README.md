@@ -43,23 +43,23 @@ public async Task<bool> ShowToastAsync()
 
 ToastRequest class is a container of information necessary for installing a shortcut and showing a toast. It has the following properties:
 
-| Property                   | Description                                                                     | Note                  |
-|----------------------------|---------------------------------------------------------------------------------|-----------------------|
-| ToastHeadline              | Toast headline                                                                  | Optional              |
-| ToastHeadlineWrapsTwoLines | Whether toast headline wraps across two lines                                   | Optional              |
-| ToastBody                  | Toast body                                                                      | Required for toast    |
-| ToastBodyExtra             | Toast body extra section                                                        | Optional              |
-| ToastImageFilePath         | Toast image file path                                                           | Optional              |
-| ToastAudio                 | Toast audio type                                                                | Optional              |
-| ShortcutFileName           | Shortcut file name to be installed in Windows startup                           | Required for shortcut |
-| ShortcutTargetFilePath     | Target file path of shortcut                                                    | Required for shortcut |
-| ShortcutArguments          | Arguments of shortcut                                                           | Optional              |
-| ShortcutComment            | Comment of shortcut                                                             | Optional              |
-| ShortcutWorkingFolder      | Working folder of shortcut                                                      | Optional              |
-| ShortcutWindowState        | Window state of shortcut                                                        | Optional              |
-| ShortcutIconFilePath       | Icon file path of shortcut                                                      | Optional              |
-| AppId                      | AppUserModelID of application                                                   | Required              |
-| WaitingTime                | Waiting time length before showing a toast after the shortcut file is installed | Optional              |
+| Property                   | Description                                                                  | Note                  |
+|----------------------------|------------------------------------------------------------------------------|-----------------------|
+| ToastHeadline              | Toast headline                                                               | Optional              |
+| ToastHeadlineWrapsTwoLines | Whether toast headline wraps across two lines                                | Optional              |
+| ToastBody                  | Toast body                                                                   | Required for toast    |
+| ToastBodyExtra             | Toast body extra section                                                     | Optional              |
+| ToastImageFilePath         | Toast image file path                                                        | Optional              |
+| ToastAudio                 | Toast audio type                                                             | Optional              |
+| ShortcutFileName           | Shortcut file name to be installed in Windows startup                        | Required for shortcut |
+| ShortcutTargetFilePath     | Target file path of shortcut                                                 | Required for shortcut |
+| ShortcutArguments          | Arguments of shortcut                                                        | Optional              |
+| ShortcutComment            | Comment of shortcut                                                          | Optional              |
+| ShortcutWorkingFolder      | Working folder of shortcut                                                   | Optional              |
+| ShortcutWindowState        | Window state of shortcut                                                     | Optional              |
+| ShortcutIconFilePath       | Icon file path of shortcut                                                   | Optional              |
+| AppId                      | AppUserModelID of application                                                | Required              |
+| WaitingDuration            | Waiting duration before showing a toast after the shortcut file is installed | Optional              |
 
 ##License
 
