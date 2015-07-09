@@ -165,10 +165,10 @@ namespace DesktopToast
 		public ToastRequest()
 		{ }
 
-		internal ToastRequest(string requestString)
+		internal ToastRequest(string requestJson)
 			: this()
 		{
-			Import(requestString);
+			Import(requestJson);
 		}
 
 		#endregion
