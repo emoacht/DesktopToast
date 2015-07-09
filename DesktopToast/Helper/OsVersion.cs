@@ -31,19 +31,26 @@ namespace DesktopToast.Helper
 
 		#region Helper
 
+		/// <summary>
+		/// Get OS version.
+		/// </summary>
+		/// <returns>OS version</returns>
+		/// <remarks>Even on Windows 8.1 or newer, WMI seems not affected by the application manifest and so
+		/// always returns correct version number.</remarks>
 		private static Version GetOsVersionByWmi()
 		{
-			var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-
-			var os = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
-
-			if ((os != null) && (os["OsType"] != null) && (os["Version"] != null))
+			using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem"))
 			{
-				if (os["OsType"].ToString() == "18") // WINNT
-					return new Version(os["Version"].ToString());
-			}
+				var os = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
 
-			return null;
+				if ((os != null) && (os["OsType"] != null) && (os["Version"] != null))
+				{
+					if (os["OsType"].ToString() == "18") // WINNT
+						return new Version(os["Version"].ToString());
+				}
+
+				return null;
+			}
 		}
 
 		#endregion
