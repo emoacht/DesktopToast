@@ -40,7 +40,7 @@ namespace DesktopToast.Helper
 					shellLink.Arguments.IsNullOrEmptyOrEquals(arguments, StringComparison.Ordinal) &&
 					shellLink.Description.IsNullOrEmptyOrEquals(comment, StringComparison.Ordinal) &&
 					shellLink.WorkingDirectory.IsNullOrEmptyOrEquals(workingFolder, StringComparison.OrdinalIgnoreCase) &&
-					(shellLink.WindowStyle == ConvertWindowState(windowState)) &&
+					(shellLink.WindowStyle == ConvertToWindowStyle(windowState)) &&
 					shellLink.IconPath.IsNullOrEmptyOrEquals(iconPath, StringComparison.OrdinalIgnoreCase) &&
 					shellLink.AppUserModelID.IsNullOrEmptyOrEquals(appId, StringComparison.Ordinal));
 			}
@@ -76,7 +76,7 @@ namespace DesktopToast.Helper
 				Arguments = arguments,
 				Description = comment,
 				WorkingDirectory = workingFolder,
-				WindowStyle = ConvertWindowState(windowState),
+				WindowStyle = ConvertToWindowStyle(windowState),
 				IconPath = iconPath,
 				IconIndex = 0, // The first icon in the file
 				AppUserModelID = appId,
@@ -124,7 +124,7 @@ namespace DesktopToast.Helper
 
 		#region Helper
 
-		private static ShellLink.SW ConvertWindowState(ShortcutWindowState windowState)
+		private static ShellLink.SW ConvertToWindowStyle(ShortcutWindowState windowState)
 		{
 			switch (windowState)
 			{

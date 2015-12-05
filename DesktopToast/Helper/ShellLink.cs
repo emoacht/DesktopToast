@@ -442,7 +442,7 @@ namespace DesktopToast.Helper
 				{
 					VerifySucceeded(this.PropertyStore.GetValue(this.ArgumentsKey, pv));
 
-					return pv.Value ?? String.Empty;
+					return pv.Value ?? string.Empty;
 				}
 			}
 			set
