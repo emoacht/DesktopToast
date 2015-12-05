@@ -67,8 +67,8 @@ namespace DesktopToast.Helper
 			string iconPath,
 			string appId)
 		{
-			if (String.IsNullOrWhiteSpace(shortcutPath))
-				throw new ArgumentNullException("shortcutPath");
+			if (string.IsNullOrWhiteSpace(shortcutPath))
+				throw new ArgumentNullException(nameof(shortcutPath));
 
 			using (var shellLink = new ShellLink
 			{
@@ -78,7 +78,7 @@ namespace DesktopToast.Helper
 				WorkingDirectory = workingFolder,
 				WindowStyle = ConvertWindowState(windowState),
 				IconPath = iconPath,
-				IconIndex = 0, // 1st icon in the file
+				IconIndex = 0, // The first icon in the file
 				AppUserModelID = appId,
 			})
 			{

@@ -27,7 +27,7 @@ namespace DesktopToast.Helper
 			}
 		}
 		private static bool? _isEightOrNewer;
-		
+
 		#region Helper
 
 		/// <summary>
@@ -42,10 +42,12 @@ namespace DesktopToast.Helper
 			{
 				var os = searcher.Get().Cast<ManagementObject>().FirstOrDefault();
 
-				if ((os != null) && (os["OsType"] != null) && (os["Version"] != null))
+				var osTypeValue = (ushort)(os?["OSType"] ?? 0);
+				if (osTypeValue == 18) // WINNT
 				{
-					if (os["OsType"].ToString() == "18") // WINNT
-						return new Version(os["Version"].ToString());
+					var versionValue = os?["Version"] as string;
+					if (versionValue != null)
+						return new Version(versionValue);
 				}
 
 				return null;

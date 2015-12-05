@@ -26,7 +26,7 @@ namespace DesktopToast
 				return ToastResult.Unavailable;
 
 			if (request == null)
-				throw new ArgumentNullException("request");
+				throw new ArgumentNullException(nameof(request));
 
 			if (request.IsShortcutValid)
 				await CheckInstallShortcut(request);
@@ -71,14 +71,14 @@ namespace DesktopToast
 				return ToastResult.Unavailable;
 
 			if (document == null)
-				throw new ArgumentNullException("document");
+				throw new ArgumentNullException(nameof(document));
 
-			if (String.IsNullOrWhiteSpace(appId))
-				throw new ArgumentNullException("appId");
+			if (string.IsNullOrWhiteSpace(appId))
+				throw new ArgumentNullException(nameof(appId));
 
 			return await ShowBaseAsync(document, appId);
 		}
-		
+
 		#region Document
 
 		private enum AudioOption
@@ -161,27 +161,27 @@ namespace DesktopToast
 
 		private static ToastTemplateType GetTemplateType(ToastRequest request)
 		{
-			if (!String.IsNullOrWhiteSpace(request.ToastImageFilePath))
+			if (!string.IsNullOrWhiteSpace(request.ToastImageFilePath))
 			{
-				if (String.IsNullOrWhiteSpace(request.ToastHeadline))
+				if (string.IsNullOrWhiteSpace(request.ToastHeadline))
 					return ToastTemplateType.ToastImageAndText01;
 
 				if (request.ToastHeadlineWrapsTwoLines)
 					return ToastTemplateType.ToastImageAndText03;
 
-				return String.IsNullOrWhiteSpace(request.ToastBodyExtra)
+				return string.IsNullOrWhiteSpace(request.ToastBodyExtra)
 					? ToastTemplateType.ToastImageAndText02
 					: ToastTemplateType.ToastImageAndText04;
 			}
 			else
 			{
-				if (String.IsNullOrWhiteSpace(request.ToastHeadline))
+				if (string.IsNullOrWhiteSpace(request.ToastHeadline))
 					return ToastTemplateType.ToastText01;
 
 				if (request.ToastHeadlineWrapsTwoLines)
 					return ToastTemplateType.ToastText03;
 
-				return String.IsNullOrWhiteSpace(request.ToastBodyExtra)
+				return string.IsNullOrWhiteSpace(request.ToastBodyExtra)
 					? ToastTemplateType.ToastText02
 					: ToastTemplateType.ToastText04;
 			}
@@ -208,11 +208,11 @@ namespace DesktopToast
 
 		private static string GetAudio(ToastAudio audio)
 		{
-			return String.Format("ms-winsoundevent:Notification.{0}", audio.ToString().ToCamelWithSeparator('.'));
+			return $"ms-winsoundevent:Notification.{audio.ToString().ToCamelWithSeparator('.')}";
 		}
 
 		#endregion
-		
+
 		#region Shortcut
 
 		/// <summary>
@@ -259,7 +259,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-		
+
 		#region Toast
 
 		/// <summary>
@@ -309,7 +309,7 @@ namespace DesktopToast
 			// Wait for the result.
 			var result = await tcs.Task;
 
-			Debug.WriteLine("Toast result: {0}", result);
+			Debug.WriteLine($"Toast result: {result}");
 
 			toast.Activated -= activated;
 			toast.Dismissed -= dismissed;

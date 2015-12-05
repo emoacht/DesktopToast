@@ -1,8 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DesktopToast.Wpf
 {
@@ -23,7 +32,7 @@ namespace DesktopToast.Wpf
 				"ToastResult",
 				typeof(string),
 				typeof(MainWindow),
-				new FrameworkPropertyMetadata(String.Empty));
+				new PropertyMetadata(string.Empty));
 
 		private async void Button_ShowToast_Click(object sender, RoutedEventArgs e)
 		{
@@ -32,13 +41,11 @@ namespace DesktopToast.Wpf
 
 		private async Task<string> ShowToastAsync()
 		{
-			var toastImageFilePath = String.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png"));
-
 			var request = new ToastRequest
 			{
 				ToastHeadline = "DesktopToast WPF Sample",
 				ToastBody = "This is a toast test.",
-				ToastImageFilePath = toastImageFilePath,
+				ToastImageFilePath = string.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png")),
 				ShortcutFileName = "DesktopToast.Wpf.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
 				AppId = "DesktopToast.Wpf",

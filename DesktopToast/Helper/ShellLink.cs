@@ -87,8 +87,10 @@ namespace DesktopToast.Helper
 			public uint nFileSizeLow;
 			public uint dwReserved0;
 			public uint dwReserved1;
+
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]
 			public string cFileName;
+
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
 			public string cAlternateFileName;
 		}
@@ -124,11 +126,11 @@ namespace DesktopToast.Helper
 		{
 			#region Field
 
-			private Guid formatId;    // Unique GUID for property
-			private Int32 propertyId; // Property identifier (PID)
+			private Guid formatId; // Unique GUID for property
+			private int propertyId; // Property identifier (PID)
 
 			#endregion
-			
+
 			#region Public Property
 
 			public Guid FormatId
@@ -136,13 +138,13 @@ namespace DesktopToast.Helper
 				get { return this.formatId; }
 			}
 
-			public Int32 PropertyId
+			public int PropertyId
 			{
 				get { return this.propertyId; }
 			}
 
 			#endregion
-			
+
 			#region Constructor
 
 			/// <summary>
@@ -150,7 +152,7 @@ namespace DesktopToast.Helper
 			/// </summary>
 			/// <param name="formatId">Format ID</param>
 			/// <param name="propertyId">Property ID</param>
-			public PropertyKey(Guid formatId, Int32 propertyId)
+			public PropertyKey(Guid formatId, int propertyId)
 			{
 				this.formatId = formatId;
 				this.propertyId = propertyId;
@@ -161,7 +163,7 @@ namespace DesktopToast.Helper
 			/// </summary>
 			/// <param name="formatId">Format ID</param>
 			/// <param name="propertyId">Property ID</param>
-			public PropertyKey(string formatId, Int32 propertyId)
+			public PropertyKey(string formatId, int propertyId)
 			{
 				this.formatId = new Guid(formatId);
 				this.propertyId = propertyId;
@@ -193,10 +195,10 @@ namespace DesktopToast.Helper
 			// private ushort wReserved3; // Reserved field
 
 			[FieldOffset(8)]
-			private IntPtr ptr;       // Value
+			private IntPtr ptr; // Value
 
 			#endregion
-			
+
 			#region Public Property
 
 			/// <summary>
@@ -229,7 +231,7 @@ namespace DesktopToast.Helper
 			}
 
 			#endregion
-			
+
 			#region Constructor
 
 			public PropVariant()
@@ -249,7 +251,7 @@ namespace DesktopToast.Helper
 			}
 
 			#endregion
-			
+
 			#region Destructor
 
 			~PropVariant()
@@ -340,7 +342,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-		
+
 		#region Field
 
 		/// <summary>
@@ -354,7 +356,7 @@ namespace DesktopToast.Helper
 		private const int MAX_PATH = 260;
 
 		#endregion
-		
+
 		#region Private Property (Interface)
 
 		private IPersistFile PersistFile
@@ -382,7 +384,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-		
+
 		#region Internal Property (not exhaustive)
 
 		/// <summary>
@@ -577,12 +579,12 @@ namespace DesktopToast.Helper
 				{
 					VerifySucceeded(this.PropertyStore.GetValue(this.AppUserModelIDKey, pv));
 
-					return pv.Value ?? String.Empty;
+					return pv.Value ?? string.Empty;
 				}
 			}
 			set
 			{
-				var buff = value ?? String.Empty;
+				var buff = value ?? string.Empty;
 				if (128 < buff.Length)
 					throw new ArgumentException("AppUserModelID is too long.", "AppUserModelID");
 
@@ -595,7 +597,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-		
+
 		#region Constructor
 
 		/// <summary>
@@ -625,7 +627,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-		
+
 		#region Destructor
 
 		~ShellLink()
@@ -650,7 +652,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-		
+
 		#region Load/Save
 
 		/// <summary>
@@ -659,7 +661,7 @@ namespace DesktopToast.Helper
 		/// <param name="shortcutPath">Shortcut file path</param>
 		internal void Load(string shortcutPath)
 		{
-			if (String.IsNullOrWhiteSpace(shortcutPath))
+			if (string.IsNullOrWhiteSpace(shortcutPath))
 				throw new ArgumentNullException("shortcutPath");
 
 			if (!File.Exists(shortcutPath))
@@ -682,14 +684,14 @@ namespace DesktopToast.Helper
 		/// <param name="shortcutPath">Shortcut file path</param>
 		internal void Save(string shortcutPath)
 		{
-			if (String.IsNullOrWhiteSpace(shortcutPath))
+			if (string.IsNullOrWhiteSpace(shortcutPath))
 				throw new ArgumentNullException("shortcutPath");
 
 			this.PersistFile.Save(shortcutPath, true);
 		}
 
 		#endregion
-		
+
 		#region Helper
 
 		/// <summary>

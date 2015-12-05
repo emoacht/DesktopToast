@@ -103,7 +103,7 @@ namespace DesktopToast
 		{
 			get
 			{
-				return !String.IsNullOrWhiteSpace(_shortcutIconFilePath)
+				return !string.IsNullOrWhiteSpace(_shortcutIconFilePath)
 					? _shortcutIconFilePath
 					: ShortcutTargetFilePath;
 			}
@@ -131,16 +131,16 @@ namespace DesktopToast
 		public TimeSpan WaitingDuration { get; set; }
 
 		#endregion
-		
+
 		#region Property (Internal)
 
 		internal bool IsShortcutValid
 		{
 			get
 			{
-				return !String.IsNullOrWhiteSpace(ShortcutFileName) &&
-					!String.IsNullOrWhiteSpace(ShortcutTargetFilePath) &&
-					!String.IsNullOrWhiteSpace(AppId);
+				return !string.IsNullOrWhiteSpace(ShortcutFileName) &&
+					!string.IsNullOrWhiteSpace(ShortcutTargetFilePath) &&
+					!string.IsNullOrWhiteSpace(AppId);
 			}
 		}
 
@@ -148,13 +148,13 @@ namespace DesktopToast
 		{
 			get
 			{
-				return !String.IsNullOrWhiteSpace(ToastBody) &&
-					!String.IsNullOrWhiteSpace(AppId);
+				return !string.IsNullOrWhiteSpace(ToastBody) &&
+					!string.IsNullOrWhiteSpace(AppId);
 			}
 		}
 
 		#endregion
-		
+
 		#region Constructor
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-		
+
 		#region Import/Export
 
 		/// <summary>
