@@ -122,7 +122,6 @@ namespace DesktopToast.Helper
 			File.Delete(shortcutPath);
 		}
 
-
 		#region Helper
 
 		private static ShellLink.SW ConvertWindowState(ShortcutWindowState windowState)

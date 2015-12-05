@@ -131,8 +131,7 @@ namespace DesktopToast
 		public TimeSpan WaitingDuration { get; set; }
 
 		#endregion
-
-
+		
 		#region Property (Internal)
 
 		internal bool IsShortcutValid
@@ -155,8 +154,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-
-
+		
 		#region Constructor
 
 		/// <summary>
@@ -172,8 +170,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-
-
+		
 		#region Import/Export
 
 		/// <summary>

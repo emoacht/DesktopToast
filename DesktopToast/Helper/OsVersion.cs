@@ -27,8 +27,7 @@ namespace DesktopToast.Helper
 			}
 		}
 		private static bool? _isEightOrNewer;
-
-
+		
 		#region Helper
 
 		/// <summary>

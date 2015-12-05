@@ -128,8 +128,7 @@ namespace DesktopToast.Helper
 			private Int32 propertyId; // Property identifier (PID)
 
 			#endregion
-
-
+			
 			#region Public Property
 
 			public Guid FormatId
@@ -143,8 +142,7 @@ namespace DesktopToast.Helper
 			}
 
 			#endregion
-
-
+			
 			#region Constructor
 
 			/// <summary>
@@ -198,8 +196,7 @@ namespace DesktopToast.Helper
 			private IntPtr ptr;       // Value
 
 			#endregion
-
-
+			
 			#region Public Property
 
 			/// <summary>
@@ -232,8 +229,7 @@ namespace DesktopToast.Helper
 			}
 
 			#endregion
-
-
+			
 			#region Constructor
 
 			public PropVariant()
@@ -253,8 +249,7 @@ namespace DesktopToast.Helper
 			}
 
 			#endregion
-
-
+			
 			#region Destructor
 
 			~PropVariant()
@@ -345,8 +340,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Field
 
 		/// <summary>
@@ -360,8 +354,7 @@ namespace DesktopToast.Helper
 		private const int MAX_PATH = 260;
 
 		#endregion
-
-
+		
 		#region Private Property (Interface)
 
 		private IPersistFile PersistFile
@@ -389,8 +382,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Internal Property (not exhaustive)
 
 		/// <summary>
@@ -603,8 +595,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Constructor
 
 		/// <summary>
@@ -634,8 +625,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Destructor
 
 		~ShellLink()
@@ -660,8 +650,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Load/Save
 
 		/// <summary>
@@ -700,8 +689,7 @@ namespace DesktopToast.Helper
 		}
 
 		#endregion
-
-
+		
 		#region Helper
 
 		/// <summary>

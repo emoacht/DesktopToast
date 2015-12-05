@@ -78,8 +78,7 @@ namespace DesktopToast
 
 			return await ShowBaseAsync(document, appId);
 		}
-
-
+		
 		#region Document
 
 		private enum AudioOption
@@ -213,8 +212,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-
-
+		
 		#region Shortcut
 
 		/// <summary>
@@ -261,8 +259,7 @@ namespace DesktopToast
 		}
 
 		#endregion
-
-
+		
 		#region Toast
 
 		/// <summary>
