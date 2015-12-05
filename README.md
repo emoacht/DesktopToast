@@ -5,7 +5,7 @@ A library for toast notifications from desktop app. This library will, if necess
 
 ##Requirements
 
- * .NET Framework 4.5
+ * .NET Framework 4.5.2
  * Windows 8.0 or newer
 
 ##Contents
@@ -29,7 +29,7 @@ public async Task<bool> ShowToastAsync()
     {
         ToastHeadline = "DesktopToast WPF Sample",
         ToastBody = "This is a toast test.",
-        ToastImageFilePath = String.Format("file:///{0}", Path.GetFullPath("toast128.png")),
+        ToastImageFilePath = string.Format("file:///{0}", Path.GetFullPath("toast128.png")),
         ShortcutFileName = "DesktopToast.Wpf.lnk",
         ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
         AppId = "DesktopToast.Wpf",
