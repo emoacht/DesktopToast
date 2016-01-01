@@ -15,7 +15,7 @@ namespace DesktopToast
 	{
 		/// <summary>
 		/// Activates and displays a window. If the window is minimized or maximized, the system restores
-		/// it to its original size and position. 
+		/// it to its original size and position.
 		/// </summary>
 		Normal = 0,
 
