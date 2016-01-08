@@ -10,13 +10,13 @@ A library for toast notifications from desktop app. This library will, if necess
 
 ##Contents
 
- - DesktopToast: The library.
+ - DesktopToast - The library.
 
- - DesktopToast.Wpf: Sample WPF app to use this library.
+ - DesktopToast.Wpf - Sample WPF app to use this library.
 
- - DesktopToast.WinForms: Sample WinForms app to use this library.
+ - DesktopToast.WinForms - Sample WinForms app to use this library.
 
- - DesktopToast.Proxy: Sample console app which acts as proxy to this library. This app will accept a request in JSON format from standard input, transfer the request to this library and return the result to standard output.
+ - DesktopToast.Proxy - Sample console app which acts as proxy to this library. This app will accept a request in JSON format from standard input, transfer the request to this library and return the result to standard output.
 
 ##Usage
 
@@ -58,7 +58,7 @@ ToastRequest class is a container of information necessary for installing a shor
 | ShortcutWorkingFolder      | Working folder of shortcut                                                   | Optional              |
 | ShortcutWindowState        | Window state of shortcut                                                     | Optional              |
 | ShortcutIconFilePath       | Icon file path of shortcut                                                   | Optional              |
-| AppId                      | AppUserModelID of application                                                | Required              |
+| AppId                      | AppUserModelID of application                                                | __Required__          |
 | WaitingDuration            | Waiting duration before showing a toast after the shortcut file is installed | Optional              |
 
 ##License
