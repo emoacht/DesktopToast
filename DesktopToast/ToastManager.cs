@@ -11,12 +11,12 @@ using DesktopToast.Helper;
 namespace DesktopToast
 {
 	/// <summary>
-	/// Show toast notifications.
+	/// Manages toast notifications.
 	/// </summary>
 	public class ToastManager
 	{
 		/// <summary>
-		/// Show a toast.
+		/// Shows a toast.
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		/// <returns>Result of showing a toast</returns>
@@ -40,7 +40,7 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Show a toast using JSON format.
+		/// Shows a toast using JSON format.
 		/// </summary>
 		/// <param name="requestJson">Toast request in JSON format</param>
 		/// <returns>Result of showing a toast</returns>
@@ -60,7 +60,7 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Show a toast without toast request.
+		/// Shows a toast without toast request.
 		/// </summary>
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>
@@ -89,7 +89,7 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Prepare a toast document.
+		/// Prepares a toast document.
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		/// <returns>Toast document</returns>
@@ -222,7 +222,7 @@ namespace DesktopToast
 		private static readonly TimeSpan _waitingDuration = TimeSpan.FromSeconds(3);
 
 		/// <summary>
-		/// Check and install a shortcut file in Start menu.
+		/// Checks and installs a shortcut file in Start menu.
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		private static async Task CheckInstallShortcut(ToastRequest request)
@@ -263,7 +263,7 @@ namespace DesktopToast
 		#region Toast
 
 		/// <summary>
-		/// Show a toast.
+		/// Shows a toast.
 		/// </summary>
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>

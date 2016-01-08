@@ -174,7 +174,7 @@ namespace DesktopToast
 		#region Import/Export
 
 		/// <summary>
-		/// Import from a request in JSON format.
+		/// Imports from a request in JSON format.
 		/// </summary>
 		/// <param name="requestJson">Request in JSON format</param>
 		internal void Import(string requestJson)
@@ -192,7 +192,7 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Export a request in JSON format.
+		/// Exports a request in JSON format.
 		/// </summary>
 		/// <returns>Request in JSON format</returns>
 		internal string Export()
