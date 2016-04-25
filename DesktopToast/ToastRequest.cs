@@ -14,7 +14,7 @@ namespace DesktopToast
 	[DataContract]
 	public class ToastRequest
 	{
-		#region Property (Public)
+		#region Public Property
 
 		/// <summary>
 		/// Toast headline (optional)
@@ -57,6 +57,13 @@ namespace DesktopToast
 		/// </summary>
 		[DataMember]
 		public ToastAudio ToastAudio { get; set; }
+
+		/// <summary>
+		/// Toast XML (optional)
+		/// </summary>
+		/// <remarks>If specified, this XML will be used as toast and other elements will be ignored.</remarks>
+		[DataMember]
+		public string ToastXml { get; set; }
 
 		/// <summary>
 		/// Shortcut file name to be installed in Start menu (required for shortcut)
@@ -125,6 +132,13 @@ namespace DesktopToast
 		public string AppId { get; set; }
 
 		/// <summary>
+		/// AppUserModelToastActivatorCLSID of application (optional, for Action Center of Windows 10)
+		/// </summary>
+		/// <remarks>This is required for the application to be started by COM server.</remarks>
+		[DataMember]
+		public Guid ActivatorId { get; set; }
+
+		/// <summary>
 		/// Waiting duration before showing a toast after the shortcut file is installed (optional)
 		/// </summary>
 		[DataMember]
@@ -132,26 +146,17 @@ namespace DesktopToast
 
 		#endregion
 
-		#region Property (Internal)
+		#region Internal Property
 
-		internal bool IsShortcutValid
-		{
-			get
-			{
-				return !string.IsNullOrWhiteSpace(ShortcutFileName) &&
-					!string.IsNullOrWhiteSpace(ShortcutTargetFilePath) &&
-					!string.IsNullOrWhiteSpace(AppId);
-			}
-		}
+		internal bool IsShortcutValid =>
+			!string.IsNullOrWhiteSpace(AppId) &&
+			!string.IsNullOrWhiteSpace(ShortcutFileName) &&
+			!string.IsNullOrWhiteSpace(ShortcutTargetFilePath);
 
-		internal bool IsToastValid
-		{
-			get
-			{
-				return !string.IsNullOrWhiteSpace(ToastBody) &&
-					!string.IsNullOrWhiteSpace(AppId);
-			}
-		}
+		internal bool IsToastValid =>
+			!string.IsNullOrWhiteSpace(AppId) &&
+			(!string.IsNullOrWhiteSpace(ToastBody) ||
+			 !string.IsNullOrWhiteSpace(ToastXml));
 
 		#endregion
 
@@ -163,8 +168,7 @@ namespace DesktopToast
 		public ToastRequest()
 		{ }
 
-		internal ToastRequest(string requestJson)
-			: this()
+		internal ToastRequest(string requestJson) : this()
 		{
 			Import(requestJson);
 		}
