@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DesktopToast.Wpf")]
-[assembly: AssemblyCopyright("Copyright © 2014-2015 EMO")]
+[assembly: AssemblyCopyright("Copyright © 2014-2016 EMO")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.0.2")]
-[assembly: AssemblyFileVersion("0.3.0.2")]
+[assembly: AssemblyVersion("0.4.0.4")]
+[assembly: AssemblyFileVersion("0.4.0.4")]
