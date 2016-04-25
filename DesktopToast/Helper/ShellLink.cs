@@ -173,7 +173,7 @@ namespace DesktopToast.Helper
 		}
 
 		/// <summary>
-		/// PropVariant Class (only for string value)
+		/// PropVariant Class (only for limited types)
 		/// </summary>
 		/// <remarks>
 		/// Narrowed down from PropVariant.cs of Windows API Code Pack 1.1
@@ -223,11 +223,22 @@ namespace DesktopToast.Helper
 			}
 
 			/// <summary>
-			/// Value (only for string value)
+			/// Value (only for limited types)
 			/// </summary>
-			public string Value
+			public object Value
 			{
-				get { return Marshal.PtrToStringUni(this.ptr); }
+				get
+				{
+					switch ((VarEnum)this.valueType)
+					{
+						case VarEnum.VT_LPWSTR:
+							return Marshal.PtrToStringUni(this.ptr);
+						case VarEnum.VT_CLSID:
+							return Marshal.PtrToStructure<Guid>(this.ptr);
+						default: // VT_EMPTY and so on
+							return null;
+					}
+				}
 			}
 
 			#endregion
@@ -248,6 +259,20 @@ namespace DesktopToast.Helper
 
 				this.valueType = (ushort)VarEnum.VT_LPWSTR;
 				this.ptr = Marshal.StringToCoTaskMemUni(value);
+			}
+
+			/// <summary>
+			/// Constructor with CLSID value
+			/// </summary>
+			/// <param name="value">CLSID value</param>
+			public PropVariant(Guid value)
+			{
+				if (value == Guid.Empty)
+					throw new ArgumentNullException("value");
+
+				this.valueType = (ushort)VarEnum.VT_CLSID;
+				this.ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(value));
+				Marshal.StructureToPtr(value, this.ptr, false);
 			}
 
 			#endregion
@@ -294,6 +319,19 @@ namespace DesktopToast.Helper
 		/// Type = String (VT_LPWSTR)
 		/// </remarks>
 		private readonly PropertyKey AppUserModelIDKey = new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 5);
+
+		/// <summary>
+		/// Property key of AppUserModelToastActivatorCLSID
+		/// </summary>
+		/// <remarks>
+		/// Name = System.AppUserModel.ToastActivatorCLSID
+		/// ShellPKey = PKEY_AppUserModel_ToastActivatorCLSID
+		/// FormatID = 9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3
+		/// PropID = 26
+		/// Type = Guid (VT_CLSID)
+		/// Taken from propkey.h of Windows SDK
+		/// </remarks>
+		private readonly PropertyKey AppUserModelToastActivatorCLSIDKey = new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 26);
 
 		/// <summary>
 		/// STGM Constants
@@ -442,7 +480,7 @@ namespace DesktopToast.Helper
 				{
 					VerifySucceeded(this.PropertyStore.GetValue(this.ArgumentsKey, pv));
 
-					return pv.Value ?? string.Empty;
+					return (pv.Value as string) ?? string.Empty;
 				}
 			}
 			set
@@ -579,7 +617,7 @@ namespace DesktopToast.Helper
 				{
 					VerifySucceeded(this.PropertyStore.GetValue(this.AppUserModelIDKey, pv));
 
-					return pv.Value ?? string.Empty;
+					return (pv.Value as string) ?? string.Empty;
 				}
 			}
 			set
@@ -591,6 +629,30 @@ namespace DesktopToast.Helper
 				using (var pv = new PropVariant(buff))
 				{
 					VerifySucceeded(this.PropertyStore.SetValue(this.AppUserModelIDKey, pv));
+					VerifySucceeded(this.PropertyStore.Commit());
+				}
+			}
+		}
+
+		/// <summary>
+		/// AppUserModelToastActivatorCLSID (to be used for Windows 10 or newer)
+		/// </summary>
+		public Guid AppUserModelToastActivatorCLSID
+		{
+			get
+			{
+				using (var pv = new PropVariant())
+				{
+					VerifySucceeded(this.PropertyStore.GetValue(this.AppUserModelToastActivatorCLSIDKey, pv));
+
+					return (pv.Value is Guid) ? (Guid)pv.Value : Guid.Empty;
+				}
+			}
+			set
+			{
+				using (var pv = new PropVariant(value))
+				{
+					VerifySucceeded(this.PropertyStore.SetValue(this.AppUserModelToastActivatorCLSIDKey, pv));
 					VerifySucceeded(this.PropertyStore.Commit());
 				}
 			}
