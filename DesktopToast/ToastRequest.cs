@@ -135,7 +135,7 @@ namespace DesktopToast
 		/// <summary>
 		/// AppUserModelToastActivatorCLSID of application (optional, for Action Center of Windows 10)
 		/// </summary>
-		/// <remarks>This is required for the application to be started by COM server.</remarks>
+		/// <remarks>This is necessary for an application to be started by COM.</remarks>
 		[DataMember]
 		public Guid ActivatorId { get; set; }
 

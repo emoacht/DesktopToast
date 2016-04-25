@@ -22,7 +22,7 @@ namespace DesktopToast.Wpf
 		{
 			InitializeComponent();
 
-			// If "-Embedding" argument is appended, it means that this application is started by COM.
+			// If "-Embedding" argument is appended, it will mean this application is started by COM.
 			if (Environment.GetCommandLineArgs().Last() == "-Embedding")
 				this.Title += " [COM]";
 		}
@@ -48,7 +48,7 @@ namespace DesktopToast.Wpf
 
 		private void OnActivated(string arguments, Dictionary<string, string> data)
 		{
-			Dispatcher.Invoke(() => ActivationResult = $"Activated {arguments}");
+			Dispatcher.Invoke(() => ActivationResult = "Activated");
 		}
 
 		public string ToastResult
