@@ -31,12 +31,12 @@ namespace DesktopToast
 		private static Action<string, Dictionary<string, string>> _action;
 
 		/// <summary>
-		/// Register COM object.
+		/// Register COM type.
 		/// </summary>
 		/// <param name="activatorType">Notification activator type</param>
 		/// <param name="action">Action to be invoked when Activate callback method is called</param>
 		/// <remarks>Notification activator must inherit from this class.</remarks>
-		public static void RegisterComObject(Type activatorType, Action<string, Dictionary<string, string>> action)
+		public static void RegisterComType(Type activatorType, Action<string, Dictionary<string, string>> action)
 		{
 			NotificationHelper.CheckArgument(activatorType);
 
@@ -55,9 +55,9 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Unregister COM object.
+		/// Unregister COM type.
 		/// </summary>
-		public static void UnregisterComObject()
+		public static void UnregisterComType()
 		{
 			if (!_cookie.HasValue)
 				return;

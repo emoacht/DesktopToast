@@ -32,7 +32,7 @@ namespace DesktopToast.Wpf
 			base.OnSourceInitialized(e);
 
 			// For Action Center of Windows 10
-			NotificationActivator.RegisterComObject(typeof(NotificationActivator), OnActivated);
+			NotificationActivator.RegisterComType(typeof(NotificationActivator), OnActivated);
 
 			NotificationHelper.RegisterComServer(typeof(NotificationActivator), Assembly.GetExecutingAssembly().Location);
 			//NotificationHelper.UnregisterComServer(typeof(NotificationActivator));
@@ -43,7 +43,7 @@ namespace DesktopToast.Wpf
 			base.OnClosing(e);
 
 			// For Action Center of Windows 10
-			NotificationActivator.UnregisterComObject();
+			NotificationActivator.UnregisterComType();
 		}
 
 		private void OnActivated(string arguments, Dictionary<string, string> data)

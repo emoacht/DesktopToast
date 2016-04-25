@@ -61,7 +61,8 @@ namespace DesktopToast
 		/// <summary>
 		/// Toast XML (optional)
 		/// </summary>
-		/// <remarks>If specified, this XML will be used as toast and other elements will be ignored.</remarks>
+		/// <remarks>If specified, this XML will be used for a toast as it is. It will make other toast
+		/// elements to be ignored.</remarks>
 		[DataMember]
 		public string ToastXml { get; set; }
 
