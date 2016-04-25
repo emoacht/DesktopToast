@@ -19,6 +19,7 @@ namespace DesktopToast.Helper
 		/// <param name="windowState">Window state of shortcut</param>
 		/// <param name="iconPath">Icon file path of shortcut</param>
 		/// <param name="appId">AppUserModelID of shortcut</param>
+		/// <param name="activatorId">AppUserModelToastActivatorCLSID of shortcut</param>
 		/// <returns>True if exists</returns>
 		public bool CheckShortcut(
 			string shortcutPath,
@@ -28,7 +29,8 @@ namespace DesktopToast.Helper
 			string workingFolder,
 			ShortcutWindowState windowState,
 			string iconPath,
-			string appId)
+			string appId,
+			Guid activatorId)
 		{
 			if (!File.Exists(shortcutPath))
 				return false;
@@ -42,7 +44,8 @@ namespace DesktopToast.Helper
 					shellLink.WorkingDirectory.IsNullOrEmptyOrEquals(workingFolder, StringComparison.OrdinalIgnoreCase) &&
 					(shellLink.WindowStyle == ConvertToWindowStyle(windowState)) &&
 					shellLink.IconPath.IsNullOrEmptyOrEquals(iconPath, StringComparison.OrdinalIgnoreCase) &&
-					shellLink.AppUserModelID.IsNullOrEmptyOrEquals(appId, StringComparison.Ordinal));
+					shellLink.AppUserModelID.IsNullOrEmptyOrEquals(appId, StringComparison.Ordinal) &&
+					((activatorId == Guid.Empty) || (shellLink.AppUserModelToastActivatorCLSID == activatorId)));
 			}
 		}
 
@@ -57,6 +60,7 @@ namespace DesktopToast.Helper
 		/// <param name="windowState">Window state of shortcut</param>
 		/// <param name="iconPath">Icon file path of shortcut</param>
 		/// <param name="appId">AppUserModelID of shortcut</param>
+		/// <param name="activatorId">AppUserModelToastActivatorCLSID of shortcut</param>
 		public void InstallShortcut(
 			string shortcutPath,
 			string targetPath,
@@ -65,7 +69,8 @@ namespace DesktopToast.Helper
 			string workingFolder,
 			ShortcutWindowState windowState,
 			string iconPath,
-			string appId)
+			string appId,
+			Guid activatorId)
 		{
 			if (string.IsNullOrWhiteSpace(shortcutPath))
 				throw new ArgumentNullException(nameof(shortcutPath));
@@ -82,6 +87,9 @@ namespace DesktopToast.Helper
 				AppUserModelID = appId,
 			})
 			{
+				if (activatorId != Guid.Empty)
+					shellLink.AppUserModelToastActivatorCLSID = activatorId;
+
 				shellLink.Save(shortcutPath);
 			}
 		}
@@ -97,6 +105,7 @@ namespace DesktopToast.Helper
 		/// <param name="windowState">Window state of shortcut</param>
 		/// <param name="iconPath">Icon file path of shortcut</param>
 		/// <param name="appId">AppUserModelID of shortcut</param>
+		/// <param name="activatorId">AppUserModelToastActivatorCLSID of shortcut</param>
 		/// <remarks>If contents of shortcut do not match, the shortcut file will not be deleted.</remarks>
 		public void DeleteShortcut(
 			string shortcutPath,
@@ -106,7 +115,8 @@ namespace DesktopToast.Helper
 			string workingFolder,
 			ShortcutWindowState windowState,
 			string iconPath,
-			string appId)
+			string appId,
+			Guid activatorId)
 		{
 			if (!CheckShortcut(
 				shortcutPath: shortcutPath,
@@ -116,7 +126,8 @@ namespace DesktopToast.Helper
 				workingFolder: workingFolder,
 				windowState: windowState,
 				iconPath: iconPath,
-				appId: appId))
+				appId: appId,
+				activatorId: activatorId))
 				return;
 
 			File.Delete(shortcutPath);
@@ -130,10 +141,8 @@ namespace DesktopToast.Helper
 			{
 				case ShortcutWindowState.Maximized:
 					return ShellLink.SW.SW_SHOWMAXIMIZED;
-
 				case ShortcutWindowState.Minimized:
 					return ShellLink.SW.SW_SHOWMINNOACTIVE;
-
 				default:
 					return ShellLink.SW.SW_SHOWNORMAL;
 			}
