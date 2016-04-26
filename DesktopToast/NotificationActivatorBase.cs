@@ -16,7 +16,7 @@ namespace DesktopToast
 	public class NotificationActivatorBase : INotificationActivationCallback
 	{
 		/// <summary>
-		/// Activate callback method when a user interacts with a toast in Action Center
+		/// Activate method to be called when a user interacts with a toast in Action Center
 		/// </summary>
 		/// <param name="appUserModelId">AppUserModelID of the application</param>
 		/// <param name="invokedArgs">Arguments from the invoked button</param>
@@ -31,7 +31,7 @@ namespace DesktopToast
 		private static Action<string, Dictionary<string, string>> _action;
 
 		/// <summary>
-		/// Register COM type.
+		/// Register COM class type.
 		/// </summary>
 		/// <param name="activatorType">Notification activator type</param>
 		/// <param name="action">Action to be invoked when Activate callback method is called</param>
@@ -55,7 +55,7 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Unregister COM type.
+		/// Unregister COM class type.
 		/// </summary>
 		public static void UnregisterComType()
 		{
@@ -75,7 +75,7 @@ namespace DesktopToast
 	public interface INotificationActivationCallback
 	{
 		/// <summary>
-		/// Activate callback method when a user interacts with a toast in Action Center
+		/// Activate method to be called when a user interacts with a toast in Action Center
 		/// </summary>
 		/// <param name="appUserModelId">AppUserModelID of the application</param>
 		/// <param name="invokedArgs">Arguments from the invoked button</param>
