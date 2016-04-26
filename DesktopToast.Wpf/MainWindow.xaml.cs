@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +21,34 @@ namespace DesktopToast.Wpf
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			// If "-Embedding" argument is appended, it will mean this application is started by COM.
+			if (Environment.GetCommandLineArgs().Last() == "-Embedding")
+				this.Title += " [COM]";
+		}
+
+		protected override void OnSourceInitialized(EventArgs e)
+		{
+			base.OnSourceInitialized(e);
+
+			// For Action Center of Windows 10
+			NotificationActivator.RegisterComType(typeof(NotificationActivator), OnActivated);
+
+			NotificationHelper.RegisterComServer(typeof(NotificationActivator), Assembly.GetExecutingAssembly().Location);
+			//NotificationHelper.UnregisterComServer(typeof(NotificationActivator));
+		}
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			base.OnClosing(e);
+
+			// For Action Center of Windows 10
+			NotificationActivator.UnregisterComType();
+		}
+
+		private void OnActivated(string arguments, Dictionary<string, string> data)
+		{
+			Dispatcher.Invoke(() => ActivationResult = "Activated");
 		}
 
 		public string ToastResult
@@ -29,13 +58,28 @@ namespace DesktopToast.Wpf
 		}
 		public static readonly DependencyProperty ToastResultProperty =
 			DependencyProperty.Register(
-				"ToastResult",
+				nameof(ToastResult),
+				typeof(string),
+				typeof(MainWindow),
+				new PropertyMetadata(string.Empty));
+
+		public string ActivationResult
+		{
+			get { return (string)GetValue(ActivationResultProperty); }
+			set { SetValue(ActivationResultProperty, value); }
+		}
+		public static readonly DependencyProperty ActivationResultProperty =
+			DependencyProperty.Register(
+				nameof(ActivationResult),
 				typeof(string),
 				typeof(MainWindow),
 				new PropertyMetadata(string.Empty));
 
 		private async void Button_ShowToast_Click(object sender, RoutedEventArgs e)
 		{
+			ToastResult = "";
+			ActivationResult = "";
+
 			ToastResult = await ShowToastAsync();
 		}
 
@@ -49,6 +93,7 @@ namespace DesktopToast.Wpf
 				ShortcutFileName = "DesktopToast.Wpf.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
 				AppId = "DesktopToast.Wpf",
+				ActivatorId = typeof(NotificationActivator).GUID // For Action Center of Windows 10
 			};
 
 			var result = await ToastManager.ShowAsync(request);

@@ -28,6 +28,25 @@ namespace DesktopToast.Helper
 		}
 		private static bool? _isEightOrNewer;
 
+		/// <summary>
+		/// Whether OS is Windows 10 or newer
+		/// </summary>
+		/// <remarks>Windows 10 = version 10.0.10240.0 or higher</remarks>
+		public static bool IsTenOrNewer
+		{
+			get
+			{
+				if (!_isTenOrNewer.HasValue)
+				{
+					var ver = GetOsVersionByWmi();
+					_isTenOrNewer = (ver != null) && (10 <= ver.Major);
+				}
+
+				return _isTenOrNewer.Value;
+			}
+		}
+		private static bool? _isTenOrNewer;
+
 		#region Helper
 
 		/// <summary>

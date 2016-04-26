@@ -9,7 +9,7 @@ using ComTypes = System.Runtime.InteropServices.ComTypes;
 namespace DesktopToast.Helper
 {
 	/// <summary>
-	/// A wrapper class for IShellLink Interface added with AppUserModelID
+	/// A wrapper class for IShellLink Interface added with AppUserModelID and AppUserModelToastActivatorCLSID
 	/// </summary>
 	/// <remarks>
 	/// Modified from http://smdn.jp/programming/tips/createlnk/
@@ -76,7 +76,7 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// WIN32_FIND_DATAW Structure
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Unicode)]
+		[StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Unicode), Serializable]
 		private struct WIN32_FIND_DATAW
 		{
 			public uint dwFileAttributes;
@@ -131,35 +131,17 @@ namespace DesktopToast.Helper
 
 			#endregion
 
-			#region Public Property
+			#region Property
 
-			public Guid FormatId
-			{
-				get { return this.formatId; }
-			}
-
-			public int PropertyId
-			{
-				get { return this.propertyId; }
-			}
+			public Guid FormatId => this.formatId;
+			public int PropertyId => this.propertyId;
 
 			#endregion
 
 			#region Constructor
 
 			/// <summary>
-			/// Constructor with Format ID as Guid value
-			/// </summary>
-			/// <param name="formatId">Format ID</param>
-			/// <param name="propertyId">Property ID</param>
-			public PropertyKey(Guid formatId, int propertyId)
-			{
-				this.formatId = formatId;
-				this.propertyId = propertyId;
-			}
-
-			/// <summary>
-			/// Constructor with Format ID as string value
+			/// Constructor
 			/// </summary>
 			/// <param name="formatId">Format ID</param>
 			/// <param name="propertyId">Property ID</param>
@@ -173,11 +155,11 @@ namespace DesktopToast.Helper
 		}
 
 		/// <summary>
-		/// PropVariant Class (only for string value)
+		/// PropVariant Class (only for limited types)
 		/// </summary>
 		/// <remarks>
 		/// Narrowed down from PropVariant.cs of Windows API Code Pack 1.1
-		/// Originally from http://blogs.msdn.com/b/adamroot/archive/2008/04/11/interop-with-propvariants-in-net.aspx
+		/// Originally from https://blogs.msdn.microsoft.com/adamroot/2008/04/11/interop-with-propvariants-in-net/
 		/// </remarks>
 		[StructLayout(LayoutKind.Explicit)]
 		private sealed class PropVariant : IDisposable
@@ -185,26 +167,26 @@ namespace DesktopToast.Helper
 			#region Field
 
 			[FieldOffset(0)]
-			private ushort valueType; // Value type
+			private ushort valueType;
 
 			// [FieldOffset(2)]
-			// private ushort wReserved1; // Reserved field
+			// private ushort wReserved1;
 			// [FieldOffset(4)]
-			// private ushort wReserved2; // Reserved field
+			// private ushort wReserved2;
 			// [FieldOffset(6)]
-			// private ushort wReserved3; // Reserved field
+			// private ushort wReserved3;
 
 			[FieldOffset(8)]
-			private IntPtr ptr; // Value
+			private IntPtr value;
 
 			#endregion
 
-			#region Public Property
+			#region Property
 
 			/// <summary>
 			/// Value type (System.Runtime.InteropServices.VarEnum)
 			/// </summary>
-			public VarEnum VarType
+			public VarEnum ValueType
 			{
 				get { return (VarEnum)this.valueType; }
 				set { this.valueType = (ushort)value; }
@@ -213,21 +195,27 @@ namespace DesktopToast.Helper
 			/// <summary>
 			/// Whether value is empty or null
 			/// </summary>
-			public bool IsNullOrEmpty
+			public bool IsNullOrEmpty =>
+				(this.valueType == (ushort)VarEnum.VT_EMPTY) ||
+				(this.valueType == (ushort)VarEnum.VT_NULL);
+
+			/// <summary>
+			/// Value (only for limited types)
+			/// </summary>
+			public object Value
 			{
 				get
 				{
-					return (this.valueType == (ushort)VarEnum.VT_EMPTY ||
-							this.valueType == (ushort)VarEnum.VT_NULL);
+					switch ((VarEnum)this.valueType)
+					{
+						case VarEnum.VT_LPWSTR:
+							return Marshal.PtrToStringUni(this.value);
+						case VarEnum.VT_CLSID:
+							return Marshal.PtrToStructure<Guid>(this.value);
+						default: // VT_EMPTY and so on
+							return null;
+					}
 				}
-			}
-
-			/// <summary>
-			/// Value (only for string value)
-			/// </summary>
-			public string Value
-			{
-				get { return Marshal.PtrToStringUni(this.ptr); }
 			}
 
 			#endregion
@@ -244,10 +232,24 @@ namespace DesktopToast.Helper
 			public PropVariant(string value)
 			{
 				if (value == null)
-					throw new ArgumentNullException("value");
+					throw new ArgumentNullException(nameof(value));
 
 				this.valueType = (ushort)VarEnum.VT_LPWSTR;
-				this.ptr = Marshal.StringToCoTaskMemUni(value);
+				this.value = Marshal.StringToCoTaskMemUni(value);
+			}
+
+			/// <summary>
+			/// Constructor with CLSID value
+			/// </summary>
+			/// <param name="value">CLSID value</param>
+			public PropVariant(Guid value)
+			{
+				if (value == Guid.Empty)
+					throw new ArgumentNullException(nameof(value));
+
+				this.valueType = (ushort)VarEnum.VT_CLSID;
+				this.value = Marshal.AllocCoTaskMem(Marshal.SizeOf(value));
+				Marshal.StructureToPtr(value, this.value, false);
 			}
 
 			#endregion
@@ -269,7 +271,7 @@ namespace DesktopToast.Helper
 		}
 
 		[DllImport("Ole32.dll", PreserveSig = false)]
-		private extern static void PropVariantClear([In, Out] PropVariant pvar); // [In, Out]
+		private extern static void PropVariantClear([In, Out] PropVariant pvar); // Or ref
 
 		/// <summary>
 		/// Property key of Arguments
@@ -281,7 +283,7 @@ namespace DesktopToast.Helper
 		/// PropID = 100
 		/// Type = String (VT_LPWSTR)
 		/// </remarks>
-		private readonly PropertyKey ArgumentsKey = new PropertyKey("{436F2667-14E2-4FEB-B30A-146C53B5B674}", 100);
+		private static readonly PropertyKey argumentsKey = new PropertyKey("{436F2667-14E2-4FEB-B30A-146C53B5B674}", 100);
 
 		/// <summary>
 		/// Property key of AppUserModelID
@@ -293,7 +295,20 @@ namespace DesktopToast.Helper
 		/// PropID = 5
 		/// Type = String (VT_LPWSTR)
 		/// </remarks>
-		private readonly PropertyKey AppUserModelIDKey = new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 5);
+		private static readonly PropertyKey appUserModelIDKey = new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 5);
+
+		/// <summary>
+		/// Property key of AppUserModelToastActivatorCLSID
+		/// </summary>
+		/// <remarks>
+		/// Name = System.AppUserModel.ToastActivatorCLSID
+		/// ShellPKey = PKEY_AppUserModel_ToastActivatorCLSID
+		/// FormatID = 9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3
+		/// PropID = 26
+		/// Type = Guid (VT_CLSID)
+		/// Taken from propkey.h of Windows SDK
+		/// </remarks>
+		private static readonly PropertyKey appUserModelToastActivatorCLSIDKey = new PropertyKey("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}", 26);
 
 		/// <summary>
 		/// STGM Constants
@@ -357,7 +372,7 @@ namespace DesktopToast.Helper
 
 		#endregion
 
-		#region Private Property (Interface)
+		#region Private Property
 
 		private IPersistFile PersistFile
 		{
@@ -418,7 +433,7 @@ namespace DesktopToast.Helper
 			set
 			{
 				if ((value != null) && (MAX_PATH - 1 < value.Length))
-					throw new ArgumentException("Target file path is too long.", "TargetPath");
+					throw new ArgumentException("Target file path is too long.", nameof(TargetPath));
 
 				VerifySucceeded(this.shellLink.SetPath(value));
 			}
@@ -440,15 +455,12 @@ namespace DesktopToast.Helper
 			{
 				using (var pv = new PropVariant())
 				{
-					VerifySucceeded(this.PropertyStore.GetValue(this.ArgumentsKey, pv));
+					VerifySucceeded(this.PropertyStore.GetValue(argumentsKey, pv));
 
-					return pv.Value ?? string.Empty;
+					return (pv.Value as string) ?? string.Empty;
 				}
 			}
-			set
-			{
-				VerifySucceeded(this.shellLink.SetArguments(value));
-			}
+			set { VerifySucceeded(this.shellLink.SetArguments(value)); }
 		}
 
 		/// <summary>
@@ -469,7 +481,7 @@ namespace DesktopToast.Helper
 			set
 			{
 				if ((value != null) && (MAX_PATH < value.Length))
-					throw new ArgumentException("Description is too long.", "Description");
+					throw new ArgumentException("Description is too long.", nameof(Description));
 
 				VerifySucceeded(this.shellLink.SetDescription(value));
 			}
@@ -491,7 +503,7 @@ namespace DesktopToast.Helper
 			set
 			{
 				if ((value != null) && (MAX_PATH - 1 < value.Length))
-					throw new ArgumentException("Working directory is too long.", "WorkingDirectory");
+					throw new ArgumentException("Working directory is too long.", nameof(WorkingDirectory));
 
 				VerifySucceeded(this.shellLink.SetWorkingDirectory(value));
 			}
@@ -509,10 +521,7 @@ namespace DesktopToast.Helper
 
 				return showCmd;
 			}
-			set
-			{
-				VerifySucceeded(this.shellLink.SetShowCmd(value));
-			}
+			set { VerifySucceeded(this.shellLink.SetShowCmd(value)); }
 		}
 
 		/// <summary>
@@ -532,7 +541,7 @@ namespace DesktopToast.Helper
 			set
 			{
 				if ((value != null) && (MAX_PATH - 1 < value.Length))
-					throw new ArgumentException("Shortcut icon file path is too long.", "IconPath");
+					throw new ArgumentException("Shortcut icon file path is too long.", nameof(IconPath));
 
 				VerifySucceeded(this.shellLink.SetIconLocation(value, IconIndex));
 			}
@@ -554,13 +563,12 @@ namespace DesktopToast.Helper
 			set
 			{
 				int index = (0 <= value) ? value : 0;
-
 				VerifySucceeded(this.shellLink.SetIconLocation(IconPath, index));
 			}
 		}
 
 		/// <summary>
-		/// AppUserModelID (to be used for Windows 7 or newer).
+		/// AppUserModelID (to be used for Windows 7 or newer)
 		/// </summary>
 		/// <remarks>
 		/// <para>According to MSDN, an AppUserModelID must be in the following form:
@@ -577,20 +585,44 @@ namespace DesktopToast.Helper
 			{
 				using (var pv = new PropVariant())
 				{
-					VerifySucceeded(this.PropertyStore.GetValue(this.AppUserModelIDKey, pv));
+					VerifySucceeded(this.PropertyStore.GetValue(appUserModelIDKey, pv));
 
-					return pv.Value ?? string.Empty;
+					return (pv.Value as string) ?? string.Empty;
 				}
 			}
 			set
 			{
 				var buff = value ?? string.Empty;
 				if (128 < buff.Length)
-					throw new ArgumentException("AppUserModelID is too long.", "AppUserModelID");
+					throw new ArgumentException("AppUserModelID is too long.", nameof(AppUserModelID));
 
 				using (var pv = new PropVariant(buff))
 				{
-					VerifySucceeded(this.PropertyStore.SetValue(this.AppUserModelIDKey, pv));
+					VerifySucceeded(this.PropertyStore.SetValue(appUserModelIDKey, pv));
+					VerifySucceeded(this.PropertyStore.Commit());
+				}
+			}
+		}
+
+		/// <summary>
+		/// AppUserModelToastActivatorCLSID (to be used for Windows 10 or newer)
+		/// </summary>
+		public Guid AppUserModelToastActivatorCLSID
+		{
+			get
+			{
+				using (var pv = new PropVariant())
+				{
+					VerifySucceeded(this.PropertyStore.GetValue(appUserModelToastActivatorCLSIDKey, pv));
+
+					return (pv.Value is Guid) ? (Guid)pv.Value : Guid.Empty;
+				}
+			}
+			set
+			{
+				using (var pv = new PropVariant(value))
+				{
+					VerifySucceeded(this.PropertyStore.SetValue(appUserModelToastActivatorCLSIDKey, pv));
 					VerifySucceeded(this.PropertyStore.Commit());
 				}
 			}
@@ -603,8 +635,7 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		public ShellLink()
-			: this(null)
+		public ShellLink() : this(null)
 		{ }
 
 		/// <summary>
@@ -662,7 +693,7 @@ namespace DesktopToast.Helper
 		internal void Load(string shortcutPath)
 		{
 			if (string.IsNullOrWhiteSpace(shortcutPath))
-				throw new ArgumentNullException("shortcutPath");
+				throw new ArgumentNullException(nameof(shortcutPath));
 
 			if (!File.Exists(shortcutPath))
 				throw new FileNotFoundException("Shortcut file is not found.", shortcutPath);
@@ -685,7 +716,7 @@ namespace DesktopToast.Helper
 		internal void Save(string shortcutPath)
 		{
 			if (string.IsNullOrWhiteSpace(shortcutPath))
-				throw new ArgumentNullException("shortcutPath");
+				throw new ArgumentNullException(nameof(shortcutPath));
 
 			this.PersistFile.Save(shortcutPath, true);
 		}

@@ -20,6 +20,8 @@ namespace DesktopToast.WinForms
 
 		private async void Button_ShowToast_Click(object sender, EventArgs e)
 		{
+			TextBox_ToastResult.Text = "";
+
 			TextBox_ToastResult.Text = await ShowToastAsync();
 		}
 

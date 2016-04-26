@@ -22,11 +22,11 @@ namespace DesktopToast
 		/// <returns>Result of showing a toast</returns>
 		public static async Task<ToastResult> ShowAsync(ToastRequest request)
 		{
-			if (!OsVersion.IsEightOrNewer)
-				return ToastResult.Unavailable;
-
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
+
+			if (!OsVersion.IsEightOrNewer)
+				return ToastResult.Unavailable;
 
 			if (request.IsShortcutValid)
 				await CheckInstallShortcut(request);
@@ -35,6 +35,8 @@ namespace DesktopToast
 				return ToastResult.Invalid;
 
 			var document = PrepareToastDocument(request);
+			if (document == null)
+				return ToastResult.Invalid;
 
 			return await ShowBaseAsync(document, request.AppId);
 		}
@@ -67,14 +69,14 @@ namespace DesktopToast
 		/// <returns>Result of showing a toast</returns>
 		public static async Task<ToastResult> ShowAsync(XmlDocument document, string appId)
 		{
-			if (!OsVersion.IsEightOrNewer)
-				return ToastResult.Unavailable;
-
 			if (document == null)
 				throw new ArgumentNullException(nameof(document));
 
 			if (string.IsNullOrWhiteSpace(appId))
 				throw new ArgumentNullException(nameof(appId));
+
+			if (!OsVersion.IsEightOrNewer)
+				return ToastResult.Unavailable;
 
 			return await ShowBaseAsync(document, appId);
 		}
@@ -94,6 +96,33 @@ namespace DesktopToast
 		/// <param name="request">Toast request</param>
 		/// <returns>Toast document</returns>
 		private static XmlDocument PrepareToastDocument(ToastRequest request)
+		{
+			if (!string.IsNullOrWhiteSpace(request.ToastXml))
+			{
+				var document = new XmlDocument();
+				try
+				{
+					document.LoadXml(request.ToastXml);
+				}
+				catch
+				{
+					return null;
+				}
+				return document;
+			}
+			if (!string.IsNullOrWhiteSpace(request.ToastBody))
+			{
+				return ComposeToastDocument(request);
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Compose a toast document.
+		/// </summary>
+		/// <param name="request">Toast request</param>
+		/// <returns>Toast document</returns>
+		private static XmlDocument ComposeToastDocument(ToastRequest request)
 		{
 			var templateType = GetTemplateType(request);
 
@@ -206,10 +235,8 @@ namespace DesktopToast
 			}
 		}
 
-		private static string GetAudio(ToastAudio audio)
-		{
-			return $"ms-winsoundevent:Notification.{audio.ToString().ToCamelWithSeparator('.')}";
-		}
+		private static string GetAudio(ToastAudio audio) =>
+			$"ms-winsoundevent:Notification.{audio.ToString().ToCamelWithSeparator('.')}";
 
 		#endregion
 
@@ -242,7 +269,8 @@ namespace DesktopToast
 				workingFolder: request.ShortcutWorkingFolder,
 				windowState: request.ShortcutWindowState,
 				iconPath: request.ShortcutIconFilePath,
-				appId: request.AppId))
+				appId: request.AppId,
+				activatorId: request.ActivatorId))
 			{
 				shortcut.InstallShortcut(
 					shortcutPath: shortcutFilePath,
@@ -252,7 +280,8 @@ namespace DesktopToast
 					workingFolder: request.ShortcutWorkingFolder,
 					windowState: request.ShortcutWindowState,
 					iconPath: request.ShortcutIconFilePath,
-					appId: request.AppId);
+					appId: request.AppId,
+					activatorId: request.ActivatorId);
 
 				await Task.Delay((TimeSpan.Zero < request.WaitingDuration) ? request.WaitingDuration : _waitingDuration);
 			}
