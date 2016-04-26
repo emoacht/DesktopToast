@@ -67,7 +67,7 @@ ToastRequest class is a container of information necessary for installing a shor
 
 To interact with Action Center of Windows 10, an application needs to register COM type which implements [INotificationActivationCallback][1]. In addition, the registration of COM server in the registry is necessary for an application to be started by COM when it is not running.
 
-See WPF sample for the implementation. Please note the CLSID of COM type (AppUserModelToastActivatorCLSID) must be unique for each application.
+See WPF sample for the implementation. Note that the CLSID of COM type (AppUserModelToastActivatorCLSID) must be unique for each application.
 
 Also check the following sample.
 

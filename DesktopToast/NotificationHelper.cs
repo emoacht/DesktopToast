@@ -14,20 +14,20 @@ namespace DesktopToast
 		/// Register COM server in the registry.
 		/// </summary>
 		/// <param name="activatorType">Notification activator type</param>
-		/// <param name="executableFilePath">Executable file path</param>
+		/// <param name="executablePath">Executable file path</param>
 		/// <param name="arguments">Arguments</param>
 		/// <remarks>If the application is not running, this executable file will be started by COM.</remarks>
-		public static void RegisterComServer(Type activatorType, string executableFilePath, string arguments = null)
+		public static void RegisterComServer(Type activatorType, string executablePath, string arguments = null)
 		{
 			CheckArgument(activatorType);
 
-			if (string.IsNullOrWhiteSpace(executableFilePath))
-				throw new ArgumentNullException(nameof(executableFilePath));
+			if (string.IsNullOrWhiteSpace(executablePath))
+				throw new ArgumentNullException(nameof(executablePath));
 
 			if (!OsVersion.IsTenOrNewer)
 				return;
 
-			var combinedPath = $@"""{executableFilePath}"" {arguments}";
+			var combinedPath = $@"""{executablePath}"" {arguments}";
 			var keyName = $@"SOFTWARE\Classes\CLSID\{{{activatorType.GUID}}}\LocalServer32";
 			using (var key = Registry.CurrentUser.OpenSubKey(keyName))
 			{

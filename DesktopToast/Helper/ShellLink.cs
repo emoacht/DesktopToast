@@ -9,7 +9,7 @@ using ComTypes = System.Runtime.InteropServices.ComTypes;
 namespace DesktopToast.Helper
 {
 	/// <summary>
-	/// A wrapper class for IShellLink Interface added with AppUserModelID
+	/// A wrapper class for IShellLink Interface added with AppUserModelID and AppUserModelToastActivatorCLSID
 	/// </summary>
 	/// <remarks>
 	/// Modified from http://smdn.jp/programming/tips/createlnk/
@@ -76,7 +76,7 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// WIN32_FIND_DATAW Structure
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Unicode)]
+		[StructLayout(LayoutKind.Sequential, Pack = 4, CharSet = CharSet.Unicode), Serializable]
 		private struct WIN32_FIND_DATAW
 		{
 			public uint dwFileAttributes;
@@ -271,7 +271,7 @@ namespace DesktopToast.Helper
 		}
 
 		[DllImport("Ole32.dll", PreserveSig = false)]
-		private extern static void PropVariantClear([In, Out] PropVariant pvar); // [In, Out]
+		private extern static void PropVariantClear([In, Out] PropVariant pvar); // Or ref
 
 		/// <summary>
 		/// Property key of Arguments

@@ -31,7 +31,7 @@ namespace DesktopToast.Helper
 		/// <summary>
 		/// Whether OS is Windows 10 or newer
 		/// </summary>
-		/// <remarks>Windows 10 = version 10.0.10240.0 or newer</remarks>
+		/// <remarks>Windows 10 = version 10.0.10240.0 or higher</remarks>
 		public static bool IsTenOrNewer
 		{
 			get
