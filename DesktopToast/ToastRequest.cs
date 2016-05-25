@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,52 +18,54 @@ namespace DesktopToast
 		#region Public Property
 
 		/// <summary>
-		/// Toast headline (optional)
+		/// Toast title (optional)
 		/// </summary>
 		[DataMember]
-		public string ToastHeadline { get; set; }
-
-		/// <summary>
-		/// Whether toast headline wraps across two lines (optional)
-		/// </summary>
-		[DataMember]
-		public bool ToastHeadlineWrapsTwoLines { get; set; }
+		public string ToastTitle { get; set; }
 
 		/// <summary>
 		/// Toast body (required for toast)
 		/// </summary>
 		[DataMember]
-		public string ToastBody { get; set; }
+		public string ToastBody
+		{
+			get { return ToastBodyList?[0]; }
+			set { ToastBodyList = new string[] { value }; }
+		}
 
 		/// <summary>
-		/// Toast body extra section (optional)
+		/// Toast body list (optional)
 		/// </summary>
-		/// <remarks>This section will be reflected only when toast headline is specified and it does not
-		/// wraps across two lines.</remarks>
+		/// <remarks>If specified, toast body will be substituted by this list.</remarks>
 		[DataMember]
-		public string ToastBodyExtra { get; set; }
+		public IList<string> ToastBodyList
+		{
+			get { return _toastBodyList; }
+			set { _toastBodyList = value?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList(); }
+		}
+		private IList<string> _toastBodyList;
 
 		/// <summary>
-		/// Toast image file path (optional)
+		/// Logo image file path of toast (optional)
 		/// </summary>
 		/// <remarks>
-		/// The image file path must be in the following form:
+		/// This file path must be in the following form:
 		/// "file:///" + full file path
 		/// </remarks>
 		[DataMember]
-		public string ToastImageFilePath { get; set; }
+		public string ToastLogoFilePath { get; set; }
 
 		/// <summary>
-		/// Toast audio type (optional)
+		/// Audio type of toast (optional)
 		/// </summary>
 		[DataMember]
 		public ToastAudio ToastAudio { get; set; }
 
 		/// <summary>
-		/// Toast XML (optional)
+		/// XML representation of toast (optional)
 		/// </summary>
-		/// <remarks>If specified, this XML will be used for a toast as it is. It will make other toast
-		/// elements to be ignored.</remarks>
+		/// <remarks>If specified, this XML will be used for a toast as it is. The other toast elements
+		/// will be ignored.</remarks>
 		[DataMember]
 		public string ToastXml { get; set; }
 
@@ -135,7 +138,7 @@ namespace DesktopToast
 		/// <summary>
 		/// AppUserModelToastActivatorCLSID of application (optional, for Action Center of Windows 10)
 		/// </summary>
-		/// <remarks>This is necessary for an application to be started by COM.</remarks>
+		/// <remarks>This CLSID is necessary for an application to be started by COM.</remarks>
 		[DataMember]
 		public Guid ActivatorId { get; set; }
 
@@ -156,7 +159,7 @@ namespace DesktopToast
 
 		internal bool IsToastValid =>
 			!string.IsNullOrWhiteSpace(AppId) &&
-			(!string.IsNullOrWhiteSpace(ToastBody) ||
+			((ToastBodyList?.Any()).GetValueOrDefault() ||
 			 !string.IsNullOrWhiteSpace(ToastXml));
 
 		#endregion
