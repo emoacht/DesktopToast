@@ -29,10 +29,9 @@ namespace DesktopToast.WinForms
 		{
 			var request = new ToastRequest
 			{
-				ToastHeadline = "DesktopToast WinForms Sample",
-				ToastBody = "This is a toast test.",
-				ToastBodyExtra = "Looping sound will be played.",
-				ToastAudio = ToastAudio.LoopingCall,
+				ToastTitle = "DesktopToast WinForms Sample",
+				ToastBodyList = new[] { "This is a toast test.", "Looping sound will be played." },
+				ToastAudio = DesktopToast.ToastAudio.LoopingCall,
 				ShortcutFileName = "DesktopToast.WinForms.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
 				AppId = "DesktopToast.WinForms",

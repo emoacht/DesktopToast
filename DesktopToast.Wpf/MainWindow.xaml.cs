@@ -13,6 +13,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using NotificationsExtensions;
+using NotificationsExtensions.Toasts;
 
 namespace DesktopToast.Wpf
 {
@@ -46,10 +48,22 @@ namespace DesktopToast.Wpf
 			NotificationActivator.UnregisterComType();
 		}
 
+		private const string MessageKey = "Message";
+
 		private void OnActivated(string arguments, Dictionary<string, string> data)
 		{
-			Dispatcher.Invoke(() => ActivationResult = "Activated");
+			var result = "Activated";
+			if ((arguments?.StartsWith("action=")).GetValueOrDefault())
+			{
+				result = arguments.Substring("action=".Length);
+
+				if ((data?.ContainsKey(MessageKey)).GetValueOrDefault())
+					Dispatcher.Invoke(() => Message = data[MessageKey]);
+			}
+			Dispatcher.Invoke(() => ActivationResult = result);
 		}
+
+		#region Property
 
 		public string ToastResult
 		{
@@ -75,10 +89,42 @@ namespace DesktopToast.Wpf
 				typeof(MainWindow),
 				new PropertyMetadata(string.Empty));
 
-		private async void Button_ShowToast_Click(object sender, RoutedEventArgs e)
+		public string Message
+		{
+			get { return (string)GetValue(MessageProperty); }
+			set { SetValue(MessageProperty, value); }
+		}
+		public static readonly DependencyProperty MessageProperty =
+			DependencyProperty.Register(
+				nameof(Message),
+				typeof(string),
+				typeof(MainWindow),
+				new PropertyMetadata(string.Empty));
+
+		public bool CanUseInteractiveToast
+		{
+			get { return (bool)GetValue(CanUseInteractiveToastProperty); }
+			set { SetValue(CanUseInteractiveToastProperty, value); }
+		}
+		public static readonly DependencyProperty CanUseInteractiveToastProperty =
+			DependencyProperty.Register(
+				nameof(CanUseInteractiveToast),
+				typeof(bool),
+				typeof(MainWindow),
+				new PropertyMetadata(Environment.OSVersion.Version.Major >= 10));
+
+		#endregion
+
+		private void Clear()
 		{
 			ToastResult = "";
 			ActivationResult = "";
+			Message = "";
+		}
+
+		private async void Button_ShowToast_Click(object sender, RoutedEventArgs e)
+		{
+			Clear();
 
 			ToastResult = await ShowToastAsync();
 		}
@@ -87,13 +133,76 @@ namespace DesktopToast.Wpf
 		{
 			var request = new ToastRequest
 			{
-				ToastHeadline = "DesktopToast WPF Sample",
+				ToastTitle = "DesktopToast WPF Sample",
 				ToastBody = "This is a toast test.",
-				ToastImageFilePath = string.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png")),
+				ToastLogoFilePath = string.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png")),
 				ShortcutFileName = "DesktopToast.Wpf.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
 				AppId = "DesktopToast.Wpf",
 				ActivatorId = typeof(NotificationActivator).GUID // For Action Center of Windows 10
+			};
+
+			var result = await ToastManager.ShowAsync(request);
+
+			return result.ToString();
+		}
+
+		private async void Button_ShowInteractiveToast_Click(object sender, RoutedEventArgs e)
+		{
+			Clear();
+
+			ToastResult = await ShowInteractiveToastAsync();
+		}
+
+		private async Task<string> ShowInteractiveToastAsync()
+		{
+			var toastVisual = new ToastVisual
+			{
+				BindingGeneric = new ToastBindingGeneric
+				{
+					Children =
+					{
+						new AdaptiveText { Text = "DesktopToast WPF Sample" }, // Title
+						new AdaptiveText { Text = "This is an interactive toast test." }, // Body
+					},
+					AppLogoOverride = new ToastGenericAppLogo
+					{
+						Source = string.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png")),
+						AlternateText = "Logo"
+					}
+				}
+			};
+			var toastAction = new ToastActionsCustom
+			{
+				Inputs =
+				{
+					new ToastTextBox(MessageKey) { PlaceholderContent = "Input a message" }
+				},
+				Buttons =
+				{
+					new ToastButton("Reply", "action=Replied") { ActivationType = ToastActivationType.Background },
+					new ToastButton("Ignore", "action=Ignored")
+				}
+			};
+			var toastContent = new ToastContent
+			{
+				Visual = toastVisual,
+				Actions = toastAction,
+				Duration = ToastDuration.Long,
+				Audio = new NotificationsExtensions.Toasts.ToastAudio
+				{
+					Loop = true,
+					Src = new Uri("ms-winsoundevent:Notification.Looping.Alarm4")
+				}
+			};
+
+			var request = new ToastRequest
+			{
+				ToastXml = toastContent.GetContent(),
+				ShortcutFileName = "DesktopToast.Wpf.lnk",
+				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+				AppId = "DesktopToast.Wpf",
+				ActivatorId = typeof(NotificationActivator).GUID
 			};
 
 			var result = await ToastManager.ShowAsync(request);

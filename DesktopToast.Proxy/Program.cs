@@ -18,8 +18,7 @@ namespace DesktopToast.Proxy
 				requestString = @"{
 ""ShortcutFileName"":""DesktopToast.Proxy.lnk"",
 ""ShortcutTargetFilePath"":""C:\\DesktopToast.Proxy.exe"",
-""ToastHeadline"":""DesktopToast Proxy Sample"",
-""ToastHeadlineWrapsTwoLines"":true,
+""ToastTitle"":""DesktopToast Proxy Sample"",
 ""ToastBody"":""This is a toast test."",
 ""AppId"":""DesktopToast.Proxy"",
 }";
@@ -30,7 +29,7 @@ namespace DesktopToast.Proxy
 			}
 
 			ToastManager.ShowAsync(requestString)
-				.ContinueWith(result => Console.WriteLine(result))
+				.ContinueWith(result => Console.WriteLine(result.Result))
 				.Wait();
 		}
 	}
