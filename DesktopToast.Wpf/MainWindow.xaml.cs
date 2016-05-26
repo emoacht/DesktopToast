@@ -48,7 +48,7 @@ namespace DesktopToast.Wpf
 			NotificationActivator.UnregisterComType();
 		}
 
-		private const string MessageKey = "Message";
+		private const string MessageId = "Message";
 
 		private void OnActivated(string arguments, Dictionary<string, string> data)
 		{
@@ -57,8 +57,8 @@ namespace DesktopToast.Wpf
 			{
 				result = arguments.Substring("action=".Length);
 
-				if ((data?.ContainsKey(MessageKey)).GetValueOrDefault())
-					Dispatcher.Invoke(() => Message = data[MessageKey]);
+				if ((data?.ContainsKey(MessageId)).GetValueOrDefault())
+					Dispatcher.Invoke(() => Message = data[MessageId]);
 			}
 			Dispatcher.Invoke(() => ActivationResult = result);
 		}
@@ -156,6 +156,22 @@ namespace DesktopToast.Wpf
 
 		private async Task<string> ShowInteractiveToastAsync()
 		{
+			var request = new ToastRequest
+			{
+				ToastXml = ComposeInteractiveToast(),
+				ShortcutFileName = "DesktopToast.Wpf.lnk",
+				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+				AppId = "DesktopToast.Wpf",
+				ActivatorId = typeof(NotificationActivator).GUID
+			};
+
+			var result = await ToastManager.ShowAsync(request);
+
+			return result.ToString();
+		}
+
+		private string ComposeInteractiveToast()
+		{
 			var toastVisual = new ToastVisual
 			{
 				BindingGeneric = new ToastBindingGeneric
@@ -176,12 +192,12 @@ namespace DesktopToast.Wpf
 			{
 				Inputs =
 				{
-					new ToastTextBox(MessageKey) { PlaceholderContent = "Input a message" }
+					new ToastTextBox(id: MessageId) { PlaceholderContent = "Input a message" }
 				},
 				Buttons =
 				{
-					new ToastButton("Reply", "action=Replied") { ActivationType = ToastActivationType.Background },
-					new ToastButton("Ignore", "action=Ignored")
+					new ToastButton(content: "Reply", arguments: "action=Replied") { ActivationType = ToastActivationType.Background },
+					new ToastButton(content: "Ignore", arguments: "action=Ignored")
 				}
 			};
 			var toastContent = new ToastContent
@@ -196,18 +212,7 @@ namespace DesktopToast.Wpf
 				}
 			};
 
-			var request = new ToastRequest
-			{
-				ToastXml = toastContent.GetContent(),
-				ShortcutFileName = "DesktopToast.Wpf.lnk",
-				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
-				AppId = "DesktopToast.Wpf",
-				ActivatorId = typeof(NotificationActivator).GUID
-			};
-
-			var result = await ToastManager.ShowAsync(request);
-
-			return result.ToString();
+			return toastContent.GetContent();
 		}
 	}
 }
