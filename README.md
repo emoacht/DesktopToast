@@ -64,7 +64,7 @@ ToastRequest class is a container of information necessary for installing a shor
 
 ##Action Center of Windows 10
 
-To interact with Action Center of Windows 10, an application needs to register COM class type which implements [INotificationActivationCallback][1]. In addition, the registration of COM server in the registry is necessary for an application to be started by COM when it is not running.
+To interact with Action Center of Windows 10, an application needs to register COM class type which implements [INotificationActivationCallback][1]. In addition, the registration of COM server in the registry is required for an application to be started by COM when it is not running.
 
 See WPF sample for implementation. Note that the CLSID of COM class type (AppUserModelToastActivatorCLSID) must be unique for each application.
 
@@ -74,7 +74,7 @@ Also check the following sample.
 
 ##Interactive toast of Windows 10
 
-To show an interactive toast of Windows 10, Prepare a XML representation of toast and set it to ToastXml property. Check the following article.
+To show an interactive toast of Windows 10, prepare a XML representation of toast and set it to ToastXml property. Check the following article.
 
  * [Adaptive and interactive toast notifications for Windows 10][3]
 
