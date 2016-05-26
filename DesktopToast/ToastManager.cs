@@ -97,9 +97,11 @@ namespace DesktopToast
 		/// <returns>Toast document</returns>
 		private static XmlDocument PrepareToastDocument(ToastRequest request)
 		{
+			XmlDocument document;
 			if (!string.IsNullOrWhiteSpace(request.ToastXml))
 			{
-				var document = new XmlDocument();
+				// Load a toast document from XML.
+				document = new XmlDocument();
 				try
 				{
 					document.LoadXml(request.ToastXml);
@@ -108,21 +110,60 @@ namespace DesktopToast
 				{
 					return null;
 				}
-				return document;
 			}
-			if (!string.IsNullOrWhiteSpace(request.ToastBody))
+			else
 			{
-				return ComposeToastDocument(request);
+				// Compose a toast document.
+				document = OsVersion.IsTenOrNewer
+					? ComposeVisualForWin10(request)
+					: ComposeVisualForWin8(request);
+
+				document = AddAudio(document, request);
 			}
-			return null;
+
+			Debug.WriteLine(document.GetXml());
+
+			return document;
 		}
 
-		/// <summary>
-		/// Compose a toast document.
-		/// </summary>
-		/// <param name="request">Toast request</param>
-		/// <returns>Toast document</returns>
-		private static XmlDocument ComposeToastDocument(ToastRequest request)
+		private static XmlDocument ComposeVisualForWin10(ToastRequest request)
+		{
+			var document = new XmlDocument();
+			document.AppendChild(document.CreateElement("toast"));
+
+			var visualElement = document.CreateElement("visual");
+			document.DocumentElement.AppendChild(visualElement);
+
+			var bindingElement = document.CreateElement("binding");
+			bindingElement.SetAttribute("template", "ToastGeneric");
+			visualElement.AppendChild(bindingElement);
+
+			if (!string.IsNullOrWhiteSpace(request.ToastTitle))
+			{
+				var toastTitle = document.CreateElement("text");
+				toastTitle.AppendChild(document.CreateTextNode(request.ToastTitle));
+				bindingElement.AppendChild(toastTitle);
+			}
+
+			foreach (string body in request.ToastBodyList)
+			{
+				var toastBody = document.CreateElement("text");
+				toastBody.AppendChild(document.CreateTextNode(body));
+				bindingElement.AppendChild(toastBody);
+			}
+
+			if (!string.IsNullOrWhiteSpace(request.ToastLogoFilePath))
+			{
+				var appLogo = document.CreateElement("image");
+				appLogo.SetAttribute("placement", "appLogoOverride");
+				appLogo.SetAttribute("src", request.ToastLogoFilePath);
+				bindingElement.AppendChild(appLogo);
+			}
+
+			return document;
+		}
+
+		private static XmlDocument ComposeVisualForWin8(ToastRequest request)
 		{
 			var templateType = GetTemplateType(request);
 
@@ -134,10 +175,9 @@ namespace DesktopToast
 			{
 				case ToastTemplateType.ToastImageAndText01:
 				case ToastTemplateType.ToastImageAndText02:
-				case ToastTemplateType.ToastImageAndText03:
 				case ToastTemplateType.ToastImageAndText04:
 					var imageElements = document.GetElementsByTagName("image");
-					imageElements[0].Attributes.GetNamedItem("src").NodeValue = request.ToastImageFilePath;
+					imageElements[0].Attributes.GetNamedItem("src").NodeValue = request.ToastLogoFilePath;
 					break;
 			}
 
@@ -147,26 +187,54 @@ namespace DesktopToast
 			{
 				case ToastTemplateType.ToastImageAndText01:
 				case ToastTemplateType.ToastText01:
-					textElements[0].AppendChild(document.CreateTextNode(request.ToastBody));
+					textElements[0].AppendChild(document.CreateTextNode(request.ToastBodyList[0]));
 					break;
 
 				case ToastTemplateType.ToastImageAndText02:
-				case ToastTemplateType.ToastImageAndText03:
 				case ToastTemplateType.ToastText02:
-				case ToastTemplateType.ToastText03:
-					textElements[0].AppendChild(document.CreateTextNode(request.ToastHeadline));
-					textElements[1].AppendChild(document.CreateTextNode(request.ToastBody));
+					textElements[0].AppendChild(document.CreateTextNode(request.ToastTitle));
+					textElements[1].AppendChild(document.CreateTextNode(request.ToastBodyList[0]));
 					break;
 
 				case ToastTemplateType.ToastImageAndText04:
 				case ToastTemplateType.ToastText04:
-					textElements[0].AppendChild(document.CreateTextNode(request.ToastHeadline));
-					textElements[1].AppendChild(document.CreateTextNode(request.ToastBody));
-					textElements[2].AppendChild(document.CreateTextNode(request.ToastBodyExtra));
+					textElements[0].AppendChild(document.CreateTextNode(request.ToastTitle));
+					textElements[1].AppendChild(document.CreateTextNode(request.ToastBodyList[0]));
+					textElements[2].AppendChild(document.CreateTextNode(request.ToastBodyList[1]));
 					break;
 			}
 
-			// Set audio element.
+			return document;
+		}
+
+		private static ToastTemplateType GetTemplateType(ToastRequest request)
+		{
+			if (!string.IsNullOrWhiteSpace(request.ToastLogoFilePath))
+			{
+				if (string.IsNullOrWhiteSpace(request.ToastTitle))
+					return ToastTemplateType.ToastImageAndText01;
+
+				return (request.ToastBodyList.Count < 2)
+					? ToastTemplateType.ToastImageAndText02
+					: ToastTemplateType.ToastImageAndText04;
+
+				// ToastTemplateType.ToastImageAndText03 will not be used.
+			}
+			else
+			{
+				if (string.IsNullOrWhiteSpace(request.ToastTitle))
+					return ToastTemplateType.ToastText01;
+
+				return (request.ToastBodyList.Count < 2)
+					? ToastTemplateType.ToastText02
+					: ToastTemplateType.ToastText04;
+
+				// ToastTemplateType.ToastText03 will not be used.
+			}
+		}
+
+		private static XmlDocument AddAudio(XmlDocument document, ToastRequest request)
+		{
 			var option = CheckAudio(request.ToastAudio);
 			if (option == AudioOption.Long)
 				document.DocumentElement.SetAttribute("duration", "long");
@@ -178,42 +246,12 @@ namespace DesktopToast
 			}
 			else
 			{
-				audioElement.SetAttribute("src", GetAudio(request.ToastAudio));
+				audioElement.SetAttribute("src", $"ms-winsoundevent:Notification.{request.ToastAudio.ToString().ToCamelWithSeparator('.')}");
 				audioElement.SetAttribute("loop", (option == AudioOption.Long) ? "true" : "false");
 			}
 			document.DocumentElement.AppendChild(audioElement);
 
-			Debug.WriteLine(document.GetXml());
-
 			return document;
-		}
-
-		private static ToastTemplateType GetTemplateType(ToastRequest request)
-		{
-			if (!string.IsNullOrWhiteSpace(request.ToastImageFilePath))
-			{
-				if (string.IsNullOrWhiteSpace(request.ToastHeadline))
-					return ToastTemplateType.ToastImageAndText01;
-
-				if (request.ToastHeadlineWrapsTwoLines)
-					return ToastTemplateType.ToastImageAndText03;
-
-				return string.IsNullOrWhiteSpace(request.ToastBodyExtra)
-					? ToastTemplateType.ToastImageAndText02
-					: ToastTemplateType.ToastImageAndText04;
-			}
-			else
-			{
-				if (string.IsNullOrWhiteSpace(request.ToastHeadline))
-					return ToastTemplateType.ToastText01;
-
-				if (request.ToastHeadlineWrapsTwoLines)
-					return ToastTemplateType.ToastText03;
-
-				return string.IsNullOrWhiteSpace(request.ToastBodyExtra)
-					? ToastTemplateType.ToastText02
-					: ToastTemplateType.ToastText04;
-			}
 		}
 
 		private static AudioOption CheckAudio(ToastAudio audio)
@@ -234,9 +272,6 @@ namespace DesktopToast
 					return AudioOption.Long;
 			}
 		}
-
-		private static string GetAudio(ToastAudio audio) =>
-			$"ms-winsoundevent:Notification.{audio.ToString().ToCamelWithSeparator('.')}";
 
 		#endregion
 
