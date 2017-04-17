@@ -1,14 +1,13 @@
-﻿Desktop Toast
-=============
+﻿# Desktop Toast
 
 A library for toast notifications from desktop app. This library will, if necessary, install a shortcut in Windows startup and show a toast asynchronously.
 
-##Requirements
+## Requirements
 
  * .NET Framework 4.5.2
  * Windows 8.0 or newer
 
-##Contents
+## Contents
 
  - DesktopToast - The library.
 
@@ -18,7 +17,7 @@ A library for toast notifications from desktop app. This library will, if necess
 
  - DesktopToast.Proxy - Sample console app which acts as proxy to this library. This app will accept a request in JSON format from standard input, transfer the request to this library and return the result to standard output.
 
-##Usage
+## Usage
 
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
 
@@ -62,7 +61,7 @@ ToastRequest class is a container of information necessary for installing a shor
 | ActivatorId            | AppUserModelToastActivatorCLSID of application (for Action Center of Windows 10)        | Optional              |
 | WaitingDuration        | Waiting duration before showing a toast after the shortcut file is installed            | Optional              |
 
-##Action Center of Windows 10
+## Action Center of Windows 10
 
 To interact with Action Center of Windows 10, an application needs to register COM class type which implements [INotificationActivationCallback][1]. In addition, the registration of COM server in the registry is required for an application to be started by COM when it is not running.
 
@@ -72,7 +71,7 @@ Also check the following sample.
 
  * [WindowsNotifications/desktop-toasts][2]
 
-##Interactive toast of Windows 10
+## Interactive toast of Windows 10
 
 To show an interactive toast of Windows 10, prepare a XML representation of toast and set it to ToastXml property. Check the following article.
 
@@ -80,7 +79,7 @@ To show an interactive toast of Windows 10, prepare a XML representation of toas
 
 You can compose it from scratch or utilize [NotificationsExtensions.Win10][4] library. See WPF sample.
 
-##License
+## License
 
  - MIT License
 
