@@ -95,7 +95,7 @@ namespace DesktopToast
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		/// <returns>Toast document</returns>
-		private static XmlDocument PrepareToastDocument(ToastRequest request)
+		private static ToastDocument PrepareToastDocument(ToastRequest request)
 		{
 			XmlDocument document;
 			if (!string.IsNullOrWhiteSpace(request.ToastXml))
@@ -123,7 +123,7 @@ namespace DesktopToast
 
 			Debug.WriteLine(document.GetXml());
 
-			return document;
+			return new ToastDocument(document);
 		}
 
 		private static XmlDocument ComposeVisualForWin10(ToastRequest request)
@@ -322,17 +322,28 @@ namespace DesktopToast
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Toast
+        #region Toast
 
-		/// <summary>
-		/// Shows a toast.
-		/// </summary>
-		/// <param name="document">Toast document</param>
-		/// <param name="appId">AppUserModelID</param>
-		/// <returns>Result of showing a toast</returns>
-		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
+        /// <summary>
+        /// Shows a toast.
+        /// </summary>
+        /// <param name="document">Toast document</param>
+        /// <param name="appId">AppUserModelID</param>
+        /// <returns>Result of showing a toast</returns>
+        private static Task<ToastResult> ShowBaseAsync(ToastDocument document, string appId)
+        {
+            return ShowBaseAsync(document.XmlDocument, appId);
+        }
+
+        /// <summary>
+        /// Shows a toast.
+        /// </summary>
+        /// <param name="document">Toast document</param>
+        /// <param name="appId">AppUserModelID</param>
+        /// <returns>Result of showing a toast</returns>
+        private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
 		{
 			// Create a toast and prepare to handle toast events.
 			var toast = new ToastNotification(document);
