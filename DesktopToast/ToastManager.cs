@@ -34,11 +34,7 @@ namespace DesktopToast
 			if (!request.IsToastValid)
 				return ToastResult.Invalid;
 
-			var document = PrepareToastDocument(request);
-			if (document == null)
-				return ToastResult.Invalid;
-
-			return await ShowBaseAsync(document, request.AppId);
+			return await ShowBaseAsync(request);
 		}
 
 		/// <summary>
@@ -325,6 +321,20 @@ namespace DesktopToast
 		#endregion
 
 		#region Toast
+
+		/// <summary>
+		/// Shows a toast.
+		/// </summary>
+		/// <param name="request">Toast request</param>
+		/// <returns>Result of showing a toast</returns>
+		private static async Task<ToastResult> ShowBaseAsync(ToastRequest request)
+		{
+			var document = PrepareToastDocument(request);
+			if (document == null)
+				return ToastResult.Invalid;
+
+			return await ShowBaseAsync(document, request.AppId);
+		}
 
 		/// <summary>
 		/// Shows a toast.
