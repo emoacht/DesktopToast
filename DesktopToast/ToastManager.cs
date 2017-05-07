@@ -334,6 +334,19 @@ namespace DesktopToast
 		/// <returns>Result of showing a toast</returns>
 		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
 		{
+			var notifier = ToastNotificationManager.CreateToastNotifier(appId);
+			switch (notifier.Setting)
+			{
+				case NotificationSetting.DisabledForApplication:
+					return ToastResult.DisabledForApplication;
+				case NotificationSetting.DisabledForUser:
+					return ToastResult.DisabledForUser;
+				case NotificationSetting.DisabledByGroupPolicy:
+					return ToastResult.DisabledByGroupPolicy;
+				case NotificationSetting.DisabledByManifest:
+					return ToastResult.DisabledByManifest;
+			}
+
 			// Create a toast and prepare to handle toast events.
 			var toast = new ToastNotification(document);
 			var tcs = new TaskCompletionSource<ToastResult>();
@@ -368,7 +381,7 @@ namespace DesktopToast
 			toast.Failed += failed;
 
 			// Show a toast.
-			ToastNotificationManager.CreateToastNotifier(appId).Show(toast);
+			notifier.Show(toast);
 
 			// Wait for the result.
 			var result = await tcs.Task;

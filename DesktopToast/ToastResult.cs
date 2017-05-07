@@ -12,6 +12,30 @@ namespace DesktopToast
 		Unavailable = 0,
 
 		/// <summary>
+		/// The user has disabled notifications for this app.
+		/// </summary>
+		/// <remarks>This corresponds to NotificationSetting.DisabledForApplication setting.</remarks>
+		DisabledForApplication,
+
+		/// <summary>
+		/// The user or administrator has disabled all notifications for this user on this computer.
+		/// </summary>
+		/// <remarks>This corresponds to NotificationSetting.DisabledForUser setting.</remarks>
+		DisabledForUser,
+
+		/// <summary>
+		/// An administrator has disabled all notifications on this computer through group policy.
+		/// </summary>
+		/// <remarks>This corresponds to NotificationSetting.DisabledByGroupPolicy setting.</remarks>
+		DisabledByGroupPolicy,
+
+		/// <summary>
+		/// This app has not declared itself toast capable in its package.appxmanifest file.
+		/// </summary>
+		/// <remarks>This corresponds to NotificationSetting.DisabledByManifest setting.</remarks>
+		DisabledByManifest,
+
+		/// <summary>
 		/// Toast request is invalid.
 		/// </summary>
 		Invalid,
