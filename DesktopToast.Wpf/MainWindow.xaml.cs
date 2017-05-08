@@ -142,7 +142,7 @@ namespace DesktopToast.Wpf
 				ActivatorId = typeof(NotificationActivator).GUID // For Action Center of Windows 10
 			};
 
-			var result = await ToastManager.ShowAsync(request);
+			var result = await ToastManager.ShowAsync(request, maximumDuration: TimeSpan.FromSeconds(10));
 
 			return result.ToString();
 		}
@@ -165,7 +165,7 @@ namespace DesktopToast.Wpf
 				ActivatorId = typeof(NotificationActivator).GUID
 			};
 
-			var result = await ToastManager.ShowAsync(request);
+			var result = await ToastManager.ShowAsync(request, maximumDuration: TimeSpan.FromSeconds(10));
 
 			return result.ToString();
 		}
