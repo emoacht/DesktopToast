@@ -51,7 +51,7 @@ namespace DesktopToast
 			ToastRequest request;
 			try
 			{
-				request = new ToastRequest(requestJson);
+				request = ToastRequest.FromJsonString(requestJson);
 			}
 			catch
 			{

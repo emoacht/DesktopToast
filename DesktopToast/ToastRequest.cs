@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -172,38 +171,28 @@ namespace DesktopToast
 		public ToastRequest()
 		{ }
 
-		internal ToastRequest(string requestJson) : this()
-		{
-			Import(requestJson);
-		}
-
 		#endregion
 
 		#region Import/Export
 
 		/// <summary>
-		/// Imports from a request in JSON format.
+		/// Creates a toast request from a JSON string.
 		/// </summary>
 		/// <param name="requestJson">Request in JSON format</param>
-		internal void Import(string requestJson)
+		public static ToastRequest FromJsonString(string requestJson)
 		{
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(requestJson)))
 			{
 				var serializer = new DataContractJsonSerializer(typeof(ToastRequest));
-				var buff = (ToastRequest)serializer.ReadObject(stream);
-
-				typeof(ToastRequest).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-					.Where(x => x.CanWrite)
-					.ToList()
-					.ForEach(x => x.SetValue(this, x.GetValue(buff)));
+				return (ToastRequest)serializer.ReadObject(stream);
 			}
 		}
 
 		/// <summary>
-		/// Exports a request in JSON format.
+		/// Converts the request to a JSON string.
 		/// </summary>
 		/// <returns>Request in JSON format</returns>
-		internal string Export()
+		public string ToJsonString()
 		{
 			using (var stream = new MemoryStream())
 			{
