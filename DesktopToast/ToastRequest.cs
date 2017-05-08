@@ -179,6 +179,7 @@ namespace DesktopToast
 		/// Creates a toast request from a JSON string.
 		/// </summary>
 		/// <param name="requestJson">Request in JSON format</param>
+		/// <returns>Toast request</returns>
 		public static ToastRequest FromJsonString(string requestJson)
 		{
 			using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(requestJson)))
