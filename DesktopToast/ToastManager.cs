@@ -38,7 +38,7 @@ namespace DesktopToast
 			if (document == null)
 				return ToastResult.Invalid;
 
-			return await ShowBaseAsync(document, request.AppId);
+			return await ShowBaseAsync(document, request.AppId, request.MaximumDuration);
 		}
 
 		/// <summary>
@@ -331,11 +331,17 @@ namespace DesktopToast
 		/// </summary>
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>
+		/// <param name="maximumDuration">Optional maximum duration</param>
 		/// <returns>Result of showing a toast</returns>
-		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
+		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId, TimeSpan maximumDuration = default(TimeSpan))
 		{
 			// Create a toast and prepare to handle toast events.
 			var toast = new ToastNotification(document);
+			if (maximumDuration != default(TimeSpan))
+			{
+				toast.ExpirationTime = DateTime.Now + maximumDuration;
+			}
+
 			var tcs = new TaskCompletionSource<ToastResult>();
 
 			TypedEventHandler<ToastNotification, object> activated = (sender, e) =>
