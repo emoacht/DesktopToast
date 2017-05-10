@@ -138,11 +138,12 @@ namespace DesktopToast.Wpf
 				ToastLogoFilePath = string.Format("file:///{0}", Path.GetFullPath("Resources/toast128.png")),
 				ShortcutFileName = "DesktopToast.Wpf.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+				MaximumDuration = TimeSpan.FromSeconds(10),
 				AppId = "DesktopToast.Wpf",
 				ActivatorId = typeof(NotificationActivator).GUID // For Action Center of Windows 10
 			};
 
-			var result = await ToastManager.ShowAsync(request, maximumDuration: TimeSpan.FromSeconds(10));
+			var result = await ToastManager.ShowAsync(request);
 
 			return result.ToString();
 		}
@@ -161,11 +162,12 @@ namespace DesktopToast.Wpf
 				ToastXml = ComposeInteractiveToast(),
 				ShortcutFileName = "DesktopToast.Wpf.lnk",
 				ShortcutTargetFilePath = Assembly.GetExecutingAssembly().Location,
+				MaximumDuration = TimeSpan.FromSeconds(10),
 				AppId = "DesktopToast.Wpf",
 				ActivatorId = typeof(NotificationActivator).GUID
 			};
 
-			var result = await ToastManager.ShowAsync(request, maximumDuration: TimeSpan.FromSeconds(10));
+			var result = await ToastManager.ShowAsync(request);
 
 			return result.ToString();
 		}
