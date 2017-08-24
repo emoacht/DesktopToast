@@ -61,6 +61,18 @@ ToastRequest class is a container of information necessary for installing a shor
 | ActivatorId            | AppUserModelToastActivatorCLSID of application (for Action Center of Windows 10)        | Optional              |
 | WaitingDuration        | Waiting duration before showing a toast after the shortcut file is installed            | Optional              |
 
+## Troubleshooting
+
+### Windows.Data namespace or Windows.UI namespace not available
+
+In this case you have to edit the `DesktopToast/DesktopToast.csproj` file and change the value of the target platform.
+Replace `8.0` in this line
+```xml
+<TargetPlatformVersion>8.0</TargetPlatformVersion>
+```
+with your local installed version. You can find your installed version here (name of the folder) `C:\Program Files (x86)\Windows Kits\10\Include`
+After this you add a reference to `Windows.Data`, `Windows.Foundation` and `Windows.UI` in the references tab under `Windows`
+
 ## Action Center of Windows 10
 
 To interact with Action Center of Windows 10, an application needs to register COM class type which implements [INotificationActivationCallback][1]. In addition, the registration of COM server in the registry is required for an application to be started by COM when it is not running.
