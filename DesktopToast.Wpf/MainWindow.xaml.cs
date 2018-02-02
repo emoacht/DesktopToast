@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -42,10 +42,15 @@ namespace DesktopToast.Wpf
 
 		protected override void OnClosing(CancelEventArgs e)
 		{
+			ToastManager.Remove("abcd","group", "DesktopToast.Wpf");
 			base.OnClosing(e);
 
 			// For Action Center of Windows 10
 			NotificationActivator.UnregisterComType();
+		}
+		protected override void OnClosed(EventArgs e)
+		{
+			base.OnClosed(e);
 		}
 
 		private const string MessageId = "Message";
@@ -165,7 +170,7 @@ namespace DesktopToast.Wpf
 				ActivatorId = typeof(NotificationActivator).GUID
 			};
 
-			var result = await ToastManager.ShowAsync(request);
+			var result = await ToastManager.ShowAsync(request,"abcd","group");
 
 			return result.ToString();
 		}
@@ -204,7 +209,6 @@ namespace DesktopToast.Wpf
 			{
 				Visual = toastVisual,
 				Actions = toastAction,
-				Duration = ToastDuration.Long,
 				Audio = new NotificationsExtensions.Toasts.ToastAudio
 				{
 					Loop = true,
