@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,11 +16,41 @@ namespace DesktopToast
 	public class ToastManager
 	{
 		/// <summary>
+		/// clear toast notification for appId
+		/// </summary>
+		/// <param name="appId">Toast appId</param>
+		public static void Clear(string appId)
+		{
+			try
+			{
+				ToastNotificationManager.History.Clear(appId);
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+		/// <summary>
+		/// remove a toast.
+		/// </summary>
+		/// <param name="tag">Toast tag</param>
+		/// <param name="group">Toast group</param>
+		/// <param name="appId">Toast appId</param>
+		public static void Remove(string tag, string group, string appId)
+		{
+			try
+			{
+				ToastNotificationManager.History.Remove(tag, group, appId);
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+		/// <summary>
 		/// Shows a toast.
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		/// <returns>Result of showing a toast</returns>
-		public static async Task<ToastResult> ShowAsync(ToastRequest request)
+		public static async Task<ToastResult> ShowAsync(ToastRequest request, string tag=null, string group=null)
 		{
 			if (request == null)
 				throw new ArgumentNullException(nameof(request));
@@ -38,7 +68,7 @@ namespace DesktopToast
 			if (document == null)
 				return ToastResult.Invalid;
 
-			return await ShowBaseAsync(document, request.AppId);
+			return await ShowBaseAsync(document, request.AppId, tag, group);
 		}
 
 		/// <summary>
@@ -78,7 +108,7 @@ namespace DesktopToast
 			if (!OsVersion.IsEightOrNewer)
 				return ToastResult.Unavailable;
 
-			return await ShowBaseAsync(document, appId);
+			return await ShowBaseAsync(document, appId,null, null);
 		}
 
 		#region Document
@@ -332,7 +362,7 @@ namespace DesktopToast
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>
 		/// <returns>Result of showing a toast</returns>
-		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
+		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId, string tag, string group)
 		{
 			// Create a toast and prepare to handle toast events.
 			var toast = new ToastNotification(document);
@@ -366,10 +396,13 @@ namespace DesktopToast
 				tcs.SetResult(ToastResult.Failed);
 			};
 			toast.Failed += failed;
+			if (!string.IsNullOrEmpty(tag))
+				toast.Tag = tag;
+			if (!string.IsNullOrEmpty(group))
+				toast.Group = group;
 
 			// Show a toast.
 			ToastNotificationManager.CreateToastNotifier(appId).Show(toast);
-
 			// Wait for the result.
 			var result = await tcs.Task;
 
