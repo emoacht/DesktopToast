@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation;
@@ -20,9 +21,20 @@ namespace DesktopToast
 		/// </summary>
 		/// <param name="request">Toast request</param>
 		/// <returns>Result of showing a toast</returns>
-		public static async Task<ToastResult> ShowAsync(ToastRequest request)
+		public static Task<ToastResult> ShowAsync(ToastRequest request)
 		{
-			if (request == null)
+			return ShowAsync(request, CancellationToken.None);
+		}
+
+		/// <summary>
+		/// Shows a toast.
+		/// </summary>
+		/// <param name="request">Toast request</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>Result of showing a toast</returns>
+		public static async Task<ToastResult> ShowAsync(ToastRequest request, CancellationToken cancellationToken)
+		{
+			if (request is null)
 				throw new ArgumentNullException(nameof(request));
 
 			if (!OsVersion.IsEightOrNewer)
@@ -35,18 +47,29 @@ namespace DesktopToast
 				return ToastResult.Invalid;
 
 			var document = PrepareToastDocument(request);
-			if (document == null)
+			if (document is null)
 				return ToastResult.Invalid;
 
-			return await ShowBaseAsync(document, request.AppId);
+			return await ShowBaseAsync(document, request.AppId, cancellationToken);
 		}
 
 		/// <summary>
-		/// Shows a toast using JSON format.
+		/// Shows a toast by toast request in JSON format.
 		/// </summary>
 		/// <param name="requestJson">Toast request in JSON format</param>
 		/// <returns>Result of showing a toast</returns>
-		public static async Task<ToastResult> ShowAsync(string requestJson)
+		public static Task<ToastResult> ShowAsync(string requestJson)
+		{
+			return ShowAsync(requestJson, CancellationToken.None);
+		}
+
+		/// <summary>
+		/// Shows a toast by toast request in JSON format.
+		/// </summary>
+		/// <param name="requestJson">Toast request in JSON format</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>Result of showing a toast</returns>
+		public static async Task<ToastResult> ShowAsync(string requestJson, CancellationToken cancellationToken)
 		{
 			ToastRequest request;
 			try
@@ -58,18 +81,30 @@ namespace DesktopToast
 				return ToastResult.Invalid;
 			}
 
-			return await ShowAsync(request);
+			return await ShowAsync(request, cancellationToken);
 		}
 
 		/// <summary>
-		/// Shows a toast without toast request.
+		/// Shows a toast by toast document.
 		/// </summary>
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>
 		/// <returns>Result of showing a toast</returns>
-		public static async Task<ToastResult> ShowAsync(XmlDocument document, string appId)
+		public static Task<ToastResult> ShowAsync(XmlDocument document, string appId)
 		{
-			if (document == null)
+			return ShowAsync(document, appId, CancellationToken.None);
+		}
+
+		/// <summary>
+		/// Shows a toast by toast document.
+		/// </summary>
+		/// <param name="document">Toast document</param>
+		/// <param name="appId">AppUserModelID</param>
+		/// <param name="cancellationToken">Cancellation token</param>
+		/// <returns>Result of showing a toast</returns>
+		public static async Task<ToastResult> ShowAsync(XmlDocument document, string appId, CancellationToken cancellationToken)
+		{
+			if (document is null)
 				throw new ArgumentNullException(nameof(document));
 
 			if (string.IsNullOrWhiteSpace(appId))
@@ -78,7 +113,7 @@ namespace DesktopToast
 			if (!OsVersion.IsEightOrNewer)
 				return ToastResult.Unavailable;
 
-			return await ShowBaseAsync(document, appId);
+			return await ShowBaseAsync(document, appId, cancellationToken);
 		}
 
 		#region Document
@@ -331,55 +366,53 @@ namespace DesktopToast
 		/// </summary>
 		/// <param name="document">Toast document</param>
 		/// <param name="appId">AppUserModelID</param>
+		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>Result of showing a toast</returns>
-		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId)
+		private static async Task<ToastResult> ShowBaseAsync(XmlDocument document, string appId, CancellationToken cancellationToken)
 		{
-			// Create a toast and prepare to handle toast events.
-			var toast = new ToastNotification(document);
+			// Prepare handlers for toast events.
 			var tcs = new TaskCompletionSource<ToastResult>();
 
-			TypedEventHandler<ToastNotification, object> activated = (sender, e) =>
+			void activated(ToastNotification _, object e) => tcs.SetResult(ToastResult.Activated);
+			void dismissed(ToastNotification _, ToastDismissedEventArgs e) => tcs.SetResult(e.Reason.ToToastResult());
+			void failed(ToastNotification _, ToastFailedEventArgs e) => tcs.SetResult(ToastResult.Failed);
+
+			var ctr = default(CancellationTokenRegistration);
+
+			// Create a toast.
+			var toast = new ToastNotification(document);
+
+			try
 			{
-				tcs.SetResult(ToastResult.Activated);
-			};
-			toast.Activated += activated;
+				// Register toast events.
+				toast.Activated += activated;
+				toast.Dismissed += dismissed;
+				toast.Failed += failed;
 
-			TypedEventHandler<ToastNotification, ToastDismissedEventArgs> dismissed = (sender, e) =>
+				// Register and check cancellation token.
+				ctr = cancellationToken.Register(() => tcs.SetResult(ToastResult.UserCanceled));
+
+				if (cancellationToken.IsCancellationRequested)
+					return ToastResult.UserCanceled;
+
+				// Show a toast.
+				ToastNotificationManager.CreateToastNotifier(appId).Show(toast);
+
+				// Wait for the result.
+				var result = await tcs.Task;
+
+				Debug.WriteLine($"Toast result: {result}");
+
+				return result;
+			}
+			finally
 			{
-				switch (e.Reason)
-				{
-					case ToastDismissalReason.ApplicationHidden:
-						tcs.SetResult(ToastResult.ApplicationHidden);
-						break;
-					case ToastDismissalReason.UserCanceled:
-						tcs.SetResult(ToastResult.UserCanceled);
-						break;
-					case ToastDismissalReason.TimedOut:
-						tcs.SetResult(ToastResult.TimedOut);
-						break;
-				}
-			};
-			toast.Dismissed += dismissed;
+				toast.Activated -= activated;
+				toast.Dismissed -= dismissed;
+				toast.Failed -= failed;
 
-			TypedEventHandler<ToastNotification, ToastFailedEventArgs> failed = (sender, e) =>
-			{
-				tcs.SetResult(ToastResult.Failed);
-			};
-			toast.Failed += failed;
-
-			// Show a toast.
-			ToastNotificationManager.CreateToastNotifier(appId).Show(toast);
-
-			// Wait for the result.
-			var result = await tcs.Task;
-
-			Debug.WriteLine($"Toast result: {result}");
-
-			toast.Activated -= activated;
-			toast.Dismissed -= dismissed;
-			toast.Failed -= failed;
-
-			return result;
+				ctr.Dispose();
+			}
 		}
 
 		#endregion

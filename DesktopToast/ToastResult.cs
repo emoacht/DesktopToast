@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using Windows.UI.Notifications;
+
 namespace DesktopToast
 {
 	/// <summary>
@@ -45,5 +47,19 @@ namespace DesktopToast
 		/// </summary>
 		/// <remarks>This corresponds to ToastNotification.Failed event.</remarks>
 		Failed
+	}
+
+	internal static class ToastResultHelper
+	{
+		public static ToastResult ToToastResult(this ToastDismissalReason reason)
+		{
+			switch (reason)
+			{
+				case ToastDismissalReason.ApplicationHidden: return ToastResult.ApplicationHidden;
+				case ToastDismissalReason.UserCanceled: return ToastResult.UserCanceled;
+				case ToastDismissalReason.TimedOut: return ToastResult.TimedOut;
+				default: throw new InvalidOperationException();
+			}
+		}
 	}
 }
