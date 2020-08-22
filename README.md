@@ -17,6 +17,10 @@ A library for toast notifications from desktop app. This library will, if necess
 
  - DesktopToast.Proxy - Sample console app which acts as proxy to this library. This app will accept a request in JSON format from standard input, transfer the request to this library and return the result to standard output.
 
+### Note
+
+- `Windows` in project references is for using Windows Runtime (WinRT) API. It refers to __Windows.winmd__ whose location has been changed over time. If it is not solved, find its location in your system and modify its path in .csproj file. 
+
 ## Usage
 
 Instantiate ToastRequest class, set its properties and then call ToastManager.ShowAsync method.
