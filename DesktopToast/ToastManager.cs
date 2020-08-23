@@ -85,27 +85,27 @@ namespace DesktopToast
 		}
 
 		/// <summary>
-		/// Shows a toast by toast document.
+		/// Shows a toast by toast request in <see cref="Windows.Data.Xml.Dom.XmlDocument"/>.
 		/// </summary>
-		/// <param name="document">Toast document</param>
+		/// <param name="requestXml">Toast request in XmlDocument</param>
 		/// <param name="appId">AppUserModelID</param>
 		/// <returns>Result of showing a toast</returns>
-		public static Task<ToastResult> ShowAsync(XmlDocument document, string appId)
+		public static Task<ToastResult> ShowAsync(object requestXml, string appId)
 		{
-			return ShowAsync(document, appId, CancellationToken.None);
+			return ShowAsync(requestXml, appId, CancellationToken.None);
 		}
 
 		/// <summary>
-		/// Shows a toast by toast document.
+		/// Shows a toast by toast request in <see cref="Windows.Data.Xml.Dom.XmlDocument"/>.
 		/// </summary>
-		/// <param name="document">Toast document</param>
+		/// <param name="requestXml">Toast request in XmlDocument</param>
 		/// <param name="appId">AppUserModelID</param>
 		/// <param name="cancellationToken">Cancellation token</param>
 		/// <returns>Result of showing a toast</returns>
-		public static async Task<ToastResult> ShowAsync(XmlDocument document, string appId, CancellationToken cancellationToken)
+		public static async Task<ToastResult> ShowAsync(object requestXml, string appId, CancellationToken cancellationToken)
 		{
-			if (document is null)
-				throw new ArgumentNullException(nameof(document));
+			if (!(requestXml is XmlDocument document))
+				throw new ArgumentException(nameof(requestXml));
 
 			if (string.IsNullOrWhiteSpace(appId))
 				throw new ArgumentNullException(nameof(appId));
