@@ -17,16 +17,15 @@ namespace DesktopToast.Helper
 		{
 			get
 			{
-				if (!_isEightOrNewer.HasValue)
-				{
-					var ver = GetOsVersionByWmi();
-					_isEightOrNewer = (ver != null) && (((6 == ver.Major) && (2 <= ver.Minor)) || (7 <= ver.Major));
-				}
-
 				return _isEightOrNewer.Value;
 			}
 		}
-		private static bool? _isEightOrNewer;
+		private static readonly Lazy<bool> _isEightOrNewer = new Lazy<bool>(GetIsEightOrNewer);
+
+		private static bool GetIsEightOrNewer()
+		{
+			return (Ver != null) && (((6 == Ver.Major) && (2 <= Ver.Minor)) || (7 <= Ver.Major));
+		}
 
 		/// <summary>
 		/// Whether OS is Windows 10 or newer
@@ -36,18 +35,29 @@ namespace DesktopToast.Helper
 		{
 			get
 			{
-				if (!_isTenOrNewer.HasValue)
-				{
-					var ver = GetOsVersionByWmi();
-					_isTenOrNewer = (ver != null) && (10 <= ver.Major);
-				}
-
 				return _isTenOrNewer.Value;
 			}
 		}
-		private static bool? _isTenOrNewer;
+		private static readonly Lazy<bool> _isTenOrNewer = new Lazy<bool>(GetIsTenOrNewer);
+
+		private static bool GetIsTenOrNewer()
+		{
+			return (Ver != null) && (10 <= Ver.Major);
+		}
 
 		#region Helper
+
+		/// <summary>
+		/// OS version.
+		/// </summary>
+		private static Version Ver
+		{
+			get
+			{
+				return _ver.Value;
+			}
+		}
+		private static readonly Lazy<Version> _ver = new Lazy<Version>(GetOsVersionByWmi);
 
 		/// <summary>
 		/// Get OS version.
